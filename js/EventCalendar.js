@@ -100,7 +100,6 @@ let eventCalendar = (function(calendarContainerId) {
     };
     
     eventCalendar.prototype.prevMonth = function(){
-       
         that.currentMonthNum <= 0 ? that.currentMonthNum = 11 : --that.currentMonthNum;
         document.getElementById('monthLabel').textContent = this.setCurrentMonthName(that.currentMonthNum);
 		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
@@ -116,7 +115,25 @@ let eventCalendar = (function(calendarContainerId) {
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
         this.drawCalendarBody();    
-    }
+	}
+	
+	eventCalendar.prototype.prevYear = function(){
+		that.currentYear--;
+		document.getElementById('yearLabel').textContent = that.currentYear;
+		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
+		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
+		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
+        this.drawCalendarBody();    
+	}
+
+	eventCalendar.prototype.nextYear = function(){
+		that.currentYear++;
+		document.getElementById('yearLabel').textContent = that.currentYear;
+		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
+		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
+		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
+        this.drawCalendarBody();    
+	}
 
 	eventCalendar.prototype.initializeCalendar = function() {
 		that.currentMonthNum = this.setCurrentMonthNum(new Date());
@@ -135,7 +152,14 @@ let eventCalendar = (function(calendarContainerId) {
 						 <span id="monthLabel">${that.currentMontName}</span>
 						 <a href="#" id="nextMont">&gt;</a>
                         </th>
-                    </tr>
+					</tr>
+					<tr>
+					<th colspan="7" class="center-align">
+					 <a href="#" id="prevYear">&lt;</a>
+					 <span id="yearLabel">${that.currentYear}</span>
+					 <a href="#" id="nextYear">&gt;</a>
+					</th>
+				</tr>
                     <tr>
                         <th>Mon</th>
                         <th>Tue</th>
@@ -276,6 +300,13 @@ let eventCalendar = (function(calendarContainerId) {
 		
 		let nextMonthBtn = document.getElementById('nextMont');
 		nextMonthBtn.addEventListener('click', () => this.nextMonth());
+		
+		let prevYearBtn = document.getElementById('prevYear');
+		prevYearBtn.addEventListener('click', () => this.prevYear());
+
+		let nextYearBtn = document.getElementById('nextYear');
+		nextYearBtn.addEventListener('click', () => this.nextYear());
+
     }
 
 	eventCalendar.prototype.createCalendar = function() {

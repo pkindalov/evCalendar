@@ -1,0 +1,19 @@
+table, tr, td{
+    border:  1px solid black;
+}
+
+
+.container{
+    margin-top: 20px;
+}
+/* .row{
+    border: 1px solid red;
+} */
+
+#eventsContainer{
+    background-color: #1e88e5;
+    position: fixed;
+    height: 56.4%;
+    width: 34%;
+    margin-left: -1%;
+}
