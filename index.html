@@ -25,7 +25,17 @@
             </div>
             <div class="col s6">
                 <div id="eventsContainer">
-                
+                    <div class="row">
+                        <div class="col s12">
+                            <div id="mainDateLabel" class="col s6 offset-s3 dateLabel"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <div id="dayName"></div>
+                        </div>
+                    </div>
+            
                      
                 </div>
             </div>
@@ -37,6 +47,11 @@
         let evCalendar = new eventCalendar();
         evCalendar.setContainer('simpleCalendarContainer');
         evCalendar.createCalendar();
+        // let todayNum = evCalendar.getTodayNum();
+       
+        // let dateLabel = document.getElementById('mainDateLabel');
+        // dateLabel.innerText = todayNum;
+
     </script>
 </body>
 

@@ -11,6 +11,8 @@ let eventCalendar = (function(calendarContainerId) {
 	that.indexToStartDays = null;
 	that.firstDayOfMonth = null;
 	that.todayNum = null;
+	that.eventsContainer = null;
+	that.eventWindowToggled = false;
 	that.eventsData = [];
 
 	function eventCalendar() {
@@ -26,6 +28,17 @@ let eventCalendar = (function(calendarContainerId) {
 
 		that.container = document.getElementById(calendarContainerId);
 	};
+
+	eventCalendar.prototype.setEventsContainer = function(eventsContainerId){
+		if (!document.getElementById(eventsContainerId)) {
+			throw new Error(
+				'Not found event container with id ' + eventsContainerId + '. Please pass valid id of container'
+			);
+			return;
+		}
+
+		that.eventsContainer = document.getElementById(eventsContainerId);
+	}
 
 	eventCalendar.prototype.setData = function(data) {
 		//TO FINISH THIS LATER. HERE SET DATA FROM OUTER WORLD ABOUT EVENTS DATA
@@ -97,7 +110,12 @@ let eventCalendar = (function(calendarContainerId) {
 
 	eventCalendar.prototype.setTodayNum = function(date) {
 		return date.getDate();
-    };
+	};
+	
+	eventCalendar.prototype.getTodayNum = function(){
+			that.todayNum = this.setTodayNum(new Date());
+			return that.todayNum;
+	}
     
     eventCalendar.prototype.prevMonth = function(){
         that.currentMonthNum <= 0 ? that.currentMonthNum = 11 : --that.currentMonthNum;
@@ -133,6 +151,11 @@ let eventCalendar = (function(calendarContainerId) {
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
         this.drawCalendarBody();    
+	}
+
+	eventCalendar.prototype.getNameOfDay = function(dayNum, monthNum, yearNum){
+		let dateStr = yearNum + '-' + (monthNum + 1) + '-' + dayNum; 
+		return new Date(dateStr).toString().split(" ")[0];
 	}
 
 	eventCalendar.prototype.initializeCalendar = function() {
@@ -208,6 +231,20 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 	};
 
+	eventCalendar.prototype.showDate = function(e){
+		let dayNum = parseInt(e.target.innerText) < 10 ? '0' + e.target.innerText : e.target.innerText; 
+		let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
+		that.eventWindowToggled = !that.eventWindowToggled;
+		if(that.eventWindowToggled){
+			document.getElementById('mainDateLabel').innerText = e.target.innerText;
+			document.getElementById('dayName').innerText = nameOfDay;
+			document.getElementById('eventsContainer').style.visibility = 'visible';
+		} else {
+			document.getElementById('eventsContainer').style.visibility = 'hidden';
+		}
+		// console.log(e.target.innerText);
+	}
+
 	eventCalendar.prototype.drawCalendarBody = function() {
 
 		// let tbodyRowsForRem = document.getElementsByTagName('tbody');
@@ -233,22 +270,29 @@ let eventCalendar = (function(calendarContainerId) {
 			let tr = document.createElement('tr');
 			for (let day = 0; day < 7; day++) {
 				let td = document.createElement('td');
-
+				
 				//check if the index is in indexToStartDays. If it is then the cell must be empty
 				if (day + counter < that.indexToStartDays || dayNum > that.currentMontCountOfDays) {
 					if ((day == 5 || day == 6) && td.innerText != "") {
 						td.setAttribute('class', '#1e88e5 blue light-1');
+						td.setAttribute('id', `day${dayNum}`);
+						td.onclick = (e) => this.showDate(e);
 					}
 					tr.append(td);
 				} else {
 					//if it is NOT in indexToStartDays then write day number in cell.
                     td.innerText = dayNum;
+					td.setAttribute('id', `day${dayNum}`);
+					td.onclick = (e) => this.showDate(e);
 					if (dayNum == that.todayNum) {
 						td.setAttribute('class', '#1e88e5 blue light-1');
+						td.onclick = (e) => this.showDate(e);
 					}
-
+					
 					if ((day == 5 || day == 6) && td.innerText != "") {
 						td.setAttribute('class', '#1e88e5 blue light-1');
+						td.setAttribute('id', `day${dayNum}`);
+						td.onclick = (e) => this.showDate(e);
 					}
 					tr.append(td);
 					dayNum++;

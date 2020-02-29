@@ -1,10 +1,22 @@
-table, tr, td{
+@import url('https://fonts.googleapis.com/css?family=Concert+One&display=swap');
+
+body{
+    font-family: 'Concert One', cursive;
+}
+
+ /* tr, td{
     border:  1px solid black;
+} */
+
+table{
+    font-size: large;
 }
 
 
 .container{
     margin-top: 20px;
+    border-radius: 5px;
+    border:  5px solid #1e88e5;
 }
 /* .row{
     border: 1px solid red;
@@ -13,7 +25,25 @@ table, tr, td{
 #eventsContainer{
     background-color: #1e88e5;
     position: fixed;
-    height: 56.4%;
-    width: 34%;
+    height: 58%;
+    width: 35%;
     margin-left: -1%;
+    visibility: hidden;
 }
+
+#dayName{
+    border: 1px solid red;
+    background-color: red;
+    height: 80px;
+    text-align: center;
+    font-size: xxx-large;
+}
+
+.dateLabel{
+    border: 1px solid red;
+    background-color: red;
+    height: 80px;
+    text-align: center;
+    font-size: xxx-large;
+}
+
