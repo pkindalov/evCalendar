@@ -15,8 +15,7 @@ let eventCalendar = (function(calendarContainerId) {
 	that.eventWindowToggled = false;
 	that.eventsData = [];
 
-	function eventCalendar() {
-    }
+	function eventCalendar() {}
 
 	eventCalendar.prototype.setContainer = function(calendarContainerId) {
 		if (!document.getElementById(calendarContainerId)) {
@@ -29,7 +28,7 @@ let eventCalendar = (function(calendarContainerId) {
 		that.container = document.getElementById(calendarContainerId);
 	};
 
-	eventCalendar.prototype.setEventsContainer = function(eventsContainerId){
+	eventCalendar.prototype.setEventsContainer = function(eventsContainerId) {
 		if (!document.getElementById(eventsContainerId)) {
 			throw new Error(
 				'Not found event container with id ' + eventsContainerId + '. Please pass valid id of container'
@@ -38,7 +37,7 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 
 		that.eventsContainer = document.getElementById(eventsContainerId);
-	}
+	};
 
 	eventCalendar.prototype.setData = function(data) {
 		//TO FINISH THIS LATER. HERE SET DATA FROM OUTER WORLD ABOUT EVENTS DATA
@@ -111,52 +110,76 @@ let eventCalendar = (function(calendarContainerId) {
 	eventCalendar.prototype.setTodayNum = function(date) {
 		return date.getDate();
 	};
-	
-	eventCalendar.prototype.getTodayNum = function(){
-			that.todayNum = this.setTodayNum(new Date());
-			return that.todayNum;
-	}
-    
-    eventCalendar.prototype.prevMonth = function(){
-        that.currentMonthNum <= 0 ? that.currentMonthNum = 11 : --that.currentMonthNum;
-        document.getElementById('monthLabel').textContent = this.setCurrentMonthName(that.currentMonthNum);
+
+	eventCalendar.prototype.getTodayNum = function() {
+		that.todayNum = this.setTodayNum(new Date());
+		return that.todayNum;
+	};
+
+	eventCalendar.prototype.prevMonth = function() {
+		that.currentMonthNum <= 0 ? (that.currentMonthNum = 11) : --that.currentMonthNum;
+		document.getElementById('monthLabel').textContent = this.setCurrentMonthName(that.currentMonthNum);
 		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
-        this.drawCalendarBody();    
-	}
-	
-	eventCalendar.prototype.nextMonth = function(){
-        that.currentMonthNum >= 11 ? that.currentMonthNum = 0 : ++that.currentMonthNum;
-        document.getElementById('monthLabel').textContent = this.setCurrentMonthName(that.currentMonthNum);
+		this.drawCalendarBody();
+	};
+
+	eventCalendar.prototype.nextMonth = function() {
+		that.currentMonthNum >= 11 ? (that.currentMonthNum = 0) : ++that.currentMonthNum;
+		document.getElementById('monthLabel').textContent = this.setCurrentMonthName(that.currentMonthNum);
 		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
-        this.drawCalendarBody();    
-	}
-	
-	eventCalendar.prototype.prevYear = function(){
+		this.drawCalendarBody();
+	};
+
+	eventCalendar.prototype.prevYear = function() {
 		that.currentYear--;
 		document.getElementById('yearLabel').textContent = that.currentYear;
 		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
-        this.drawCalendarBody();    
-	}
+		this.drawCalendarBody();
+	};
 
-	eventCalendar.prototype.nextYear = function(){
+	eventCalendar.prototype.nextYear = function() {
 		that.currentYear++;
 		document.getElementById('yearLabel').textContent = that.currentYear;
 		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
-        this.drawCalendarBody();    
-	}
+		this.drawCalendarBody();
+	};
 
-	eventCalendar.prototype.getNameOfDay = function(dayNum, monthNum, yearNum){
-		let dateStr = yearNum + '-' + (monthNum + 1) + '-' + dayNum; 
-		return new Date(dateStr).toString().split(" ")[0];
-	}
+	eventCalendar.prototype.getNameOfDay = function(dayNum, monthNum, yearNum) {
+		let days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];
+		let dateStr = yearNum + '-' + (monthNum + 1) + '-' + dayNum;
+		let dateNameAbbr = new Date(dateStr).toString().split(' ')[0];
+		switch (dateNameAbbr) {
+			case 'Mon':
+				return days[0];
+				break;
+			case 'Tue':
+				return days[1];
+				break;
+			case 'Wed':
+				return days[2];
+				break;
+			case 'Thu':
+				return days[3];
+				break;
+			case 'Fri':
+				return days[4];
+				break;
+			case 'Sat':
+				return days[5];
+				break;
+			case 'Sun':
+				return days[6];
+				break;
+		}
+	};
 
 	eventCalendar.prototype.initializeCalendar = function() {
 		that.currentMonthNum = this.setCurrentMonthNum(new Date());
@@ -218,10 +241,10 @@ let eventCalendar = (function(calendarContainerId) {
 				break;
 			case 'Thu':
 				return rows;
-                break;
-            case 'Fri':
-                return rows;
-                break;    
+				break;
+			case 'Fri':
+				return rows;
+				break;
 			case 'Sat':
 				return rows - 1;
 				break;
@@ -231,30 +254,43 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 	};
 
-	eventCalendar.prototype.showDate = function(e){
-		let dayNum = parseInt(e.target.innerText) < 10 ? '0' + e.target.innerText : e.target.innerText; 
+	eventCalendar.prototype.addEventForm = function(){
+		// alert(document.getElementById('mainDateLabel').innerText);
+		document.getElementById('eventsDashboard').innerHTML = '<div id="addEventCont"></div>';
+	}
+
+	eventCalendar.prototype.showDate = function(e) {
+		let dayNum = parseInt(e.target.innerText) < 10 ? '0' + e.target.innerText : e.target.innerText;
 		let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
+		
 		that.eventWindowToggled = !that.eventWindowToggled;
-		if(that.eventWindowToggled){
+		if (that.eventWindowToggled) {
+			let addEventBtn = document.createElement('a');
+			addEventBtn.setAttribute('class', 'waves-effect waves-light btn');
+			addEventBtn.innerText = "Add event";
+			addEventBtn.onclick = () => this.addEventForm();
+			document.getElementById('addEventCont').appendChild(addEventBtn);
 			document.getElementById('mainDateLabel').innerText = e.target.innerText;
 			document.getElementById('dayName').innerText = nameOfDay;
 			document.getElementById('eventsContainer').style.visibility = 'visible';
 		} else {
+			if(document.getElementById('addEventCont')){
+				document.getElementById('addEventCont').innerHTML = '';
+			}
 			document.getElementById('eventsContainer').style.visibility = 'hidden';
 		}
 		// console.log(e.target.innerText);
-	}
+	};
 
 	eventCalendar.prototype.drawCalendarBody = function() {
-
 		// let tbodyRowsForRem = document.getElementsByTagName('tbody');
 		if (that.calendarBody != null) {
 			that.calendarTable.removeChild(that.calendarBody);
 			that.calendarBody = document.createElement('tbody', 'evCalendarBody');
-			that.calendarBody.setAttribute('id', 'evCalendarBody')
+			that.calendarBody.setAttribute('id', 'evCalendarBody');
 			that.calendarTable.appendChild(that.calendarBody);
 		}
-		
+
 		// console.log(rows);
 		// console.log(rows.parentNode);
 
@@ -270,10 +306,10 @@ let eventCalendar = (function(calendarContainerId) {
 			let tr = document.createElement('tr');
 			for (let day = 0; day < 7; day++) {
 				let td = document.createElement('td');
-				
+
 				//check if the index is in indexToStartDays. If it is then the cell must be empty
 				if (day + counter < that.indexToStartDays || dayNum > that.currentMontCountOfDays) {
-					if ((day == 5 || day == 6) && td.innerText != "") {
+					if ((day == 5 || day == 6) && td.innerText != '') {
 						td.setAttribute('class', '#1e88e5 blue light-1');
 						td.setAttribute('id', `day${dayNum}`);
 						td.onclick = (e) => this.showDate(e);
@@ -281,15 +317,15 @@ let eventCalendar = (function(calendarContainerId) {
 					tr.append(td);
 				} else {
 					//if it is NOT in indexToStartDays then write day number in cell.
-                    td.innerText = dayNum;
+					td.innerText = dayNum;
 					td.setAttribute('id', `day${dayNum}`);
 					td.onclick = (e) => this.showDate(e);
 					if (dayNum == that.todayNum) {
 						td.setAttribute('class', '#1e88e5 blue light-1');
 						td.onclick = (e) => this.showDate(e);
 					}
-					
-					if ((day == 5 || day == 6) && td.innerText != "") {
+
+					if ((day == 5 || day == 6) && td.innerText != '') {
 						td.setAttribute('class', '#1e88e5 blue light-1');
 						td.setAttribute('id', `day${dayNum}`);
 						td.onclick = (e) => this.showDate(e);
@@ -336,22 +372,21 @@ let eventCalendar = (function(calendarContainerId) {
 		//     }
 
 		// }
-    };
-    
-    eventCalendar.prototype.addListenersToCalendar = function(){
-        let prevMonthBtn = document.getElementById('prevMont');
+	};
+
+	eventCalendar.prototype.addListenersToCalendar = function() {
+		let prevMonthBtn = document.getElementById('prevMont');
 		prevMonthBtn.addEventListener('click', () => this.prevMonth());
-		
+
 		let nextMonthBtn = document.getElementById('nextMont');
 		nextMonthBtn.addEventListener('click', () => this.nextMonth());
-		
+
 		let prevYearBtn = document.getElementById('prevYear');
 		prevYearBtn.addEventListener('click', () => this.prevYear());
 
 		let nextYearBtn = document.getElementById('nextYear');
 		nextYearBtn.addEventListener('click', () => this.nextYear());
-
-    }
+	};
 
 	eventCalendar.prototype.createCalendar = function() {
 		if (!that.container) {
@@ -359,14 +394,14 @@ let eventCalendar = (function(calendarContainerId) {
 			return;
 		}
 
-        that.calendar = this.initializeCalendar();
-        
+		that.calendar = this.initializeCalendar();
+
 		that.container.innerHTML = that.calendar;
 		that.calendarTable = document.getElementById('evCalendar');
-        that.calendarBody = document.getElementById('evCalendarBody');
+		that.calendarBody = document.getElementById('evCalendarBody');
 
-        this.drawCalendarBody();
-        this.addListenersToCalendar();
+		this.drawCalendarBody();
+		this.addListenersToCalendar();
 		// document.getElementById('evCalendarBody').innerHTML += this.drawCalendarBody();
 		// document.getElementById('evCalendarBody').innerHTML = '';
 	};

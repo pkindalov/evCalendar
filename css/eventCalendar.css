@@ -9,6 +9,8 @@ body{
 } */
 
 table{
+    border-spacing: 0;
+    border-collapse: collapse;
     font-size: large;
 }
 
@@ -22,26 +24,105 @@ table{
     border: 1px solid red;
 } */
 
+
 #eventsContainer{
     background-color: #1e88e5;
     position: fixed;
-    height: 58%;
-    width: 35%;
+    height: 66%;
+    width: 42%;
     margin-left: -1%;
     visibility: hidden;
 }
 
+@media(min-width: 300px){
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 80%;
+        width: 43%;
+        /* margin-left: -1%; */
+        visibility: hidden;
+    } 
+}
+
+@media(min-width: 300px) and (max-width: 360px){
+    #eventsContainer{
+        /* background-color: #1e88e5; */
+        background-color: red;
+        position: fixed;
+        height: 72%;
+        width: 43%;
+        /* margin-left: -1%; */
+        visibility: hidden;
+    } 
+}
+
+@media(min-width: 300px) and (max-width: 375px){
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 66%;
+        width: 43%;
+        /* margin-left: -1%; */
+        visibility: hidden;
+    } 
+}
+
+@media(min-width: 400px){
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 73%;
+        width: 43%;
+        /* margin-left: -1%; */
+        visibility: hidden;
+    } 
+}
+
+@media(min-width: 700px){
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 52.1%;
+        width: 42%;
+        /* margin-left: -1%; */
+        visibility: hidden;
+    } 
+}
+
+@media(min-width: 800px){
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 42%;
+        width: 42%;
+        /* margin-left: -1%; */
+        visibility: hidden;
+    } 
+}
+
+@media(min-width: 1200px){
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 70%;
+        width: 35%;
+        margin-left: -1%;
+        visibility: hidden;
+    } 
+}
+
 #dayName{
-    border: 1px solid red;
-    background-color: red;
+    /* border: 1px solid red;
+    background-color: red; */
     height: 80px;
     text-align: center;
-    font-size: xxx-large;
+    font-size: xx-large;
 }
 
 .dateLabel{
-    border: 1px solid red;
-    background-color: red;
+    /* border: 1px solid red;
+    background-color: red; */
     height: 80px;
     text-align: center;
     font-size: xxx-large;
