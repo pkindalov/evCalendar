@@ -254,29 +254,60 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 	};
 
-	eventCalendar.prototype.addEventForm = function(){
+	eventCalendar.prototype.addEventForm = function() {
 		// alert(document.getElementById('mainDateLabel').innerText);
-		document.getElementById('eventsDashboard').innerHTML = '<div id="addEventCont"></div>';
-	}
+		let eventsDashboard = document.getElementById('eventsDashboard');
+		eventsDashboard.innerHTML = '<div id="addEventCont"></div>';
+		let form = `
+			<form id="createEventForm" action="#" method="post">
+				<label for="hoursBegin">Begin</label>
+				  <input type="text" name="hoursBegin" class="timepicker" />
+				  <label for="hoursFinish">Finish</label>
+				  <input type="text" name="hoursFinish" class="timepicker" />  
+				  <label for="eventText">Text</label>
+				  <textarea id="eventText" class="materialize-textarea"></textarea>
+				  <input type="submit" class="waves-effect waves-light btn" value="Create Event" />
+				  <input type="reset" class="waves-effect waves-light btn" value="Clear" />
+			</form>
+		`;
+
+		eventsDashboard.innerHTML += form;
+
+		let elems = document.querySelectorAll('.timepicker');
+		let instances = M.Timepicker.init(elems, { twelveHour: false, showClearBtn: true });
+	};
 
 	eventCalendar.prototype.showDate = function(e) {
 		let dayNum = parseInt(e.target.innerText) < 10 ? '0' + e.target.innerText : e.target.innerText;
 		let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
-		
+
 		that.eventWindowToggled = !that.eventWindowToggled;
 		if (that.eventWindowToggled) {
 			let addEventBtn = document.createElement('a');
 			addEventBtn.setAttribute('class', 'waves-effect waves-light btn');
-			addEventBtn.innerText = "Add event";
+			addEventBtn.innerText = 'Add event';
 			addEventBtn.onclick = () => this.addEventForm();
+			if(!document.getElementById('addEventCont')){
+				let addEventContDiv = document.createElement('div');
+				addEventContDiv.setAttribute('id', 'addEventCont');
+				document.getElementById(eventsDashboard).appendChild(addEventContDiv);
+			} 
 			document.getElementById('addEventCont').appendChild(addEventBtn);
 			document.getElementById('mainDateLabel').innerText = e.target.innerText;
 			document.getElementById('dayName').innerText = nameOfDay;
 			document.getElementById('eventsContainer').style.visibility = 'visible';
 		} else {
-			if(document.getElementById('addEventCont')){
+			if (document.getElementById('addEventCont')) {
 				document.getElementById('addEventCont').innerHTML = '';
 			}
+
+			if(document.getElementById('createEventForm')){
+				let form = document.getElementById('createEventForm');
+				document.getElementById('eventsDashboard').removeChild(form);
+			}
+			// if(document.getElementById('eventsDashboard')){
+			// 	document.getElementById('eventsDashboard').innerHTML = '';
+			// }
 			document.getElementById('eventsContainer').style.visibility = 'hidden';
 		}
 		// console.log(e.target.innerText);
