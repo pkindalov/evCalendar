@@ -14,6 +14,10 @@ table{
     font-size: large;
 }
 
+td:hover{
+    cursor: pointer;
+}
+
 
 .container{
     margin-top: 20px;
@@ -59,11 +63,15 @@ table{
     font-size: xx-large;
 }
 
-.dateLabel{
+.dateLabel, .monthLabel, .yearLabel{
     /* border: 1px solid red;
     background-color: red; */
-    height: 80px;
+    height: 30px;
     text-align: center;
     font-size: xxx-large;
+}
+
+.monthLabel, .yearLabel{
+    height: 60px;
 }
 

@@ -287,7 +287,7 @@ let eventCalendar = (function(calendarContainerId) {
 
 	eventCalendar.prototype.createList = function(type, data) {
 		let listCont = document.createElement(type);
-			listCont.setAttribute('id', 'eventsCont');
+		listCont.setAttribute('id', 'eventsCont');
 		li = null;
 
 		for (let event of data) {
@@ -327,33 +327,39 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 	};
 
-	eventCalendar.prototype.drawEvents = function(eventsDataList, container){
+	eventCalendar.prototype.drawEvents = function(eventsDataList, container) {
+		if(document.getElementById('eventsList')){
+			document.getElementById('eventsList').remove();
+		}
 		let listCont = document.createElement('div');
 		listCont.setAttribute('id', 'eventsList');
 		listCont.setAttribute('class', 'flow-text');
 		// listCont.style.overflow = 'scroll';
 		listCont.appendChild(eventsDataList);
 
-		if(document.getElementById('eventsCont')){
+		if (document.getElementById('eventsCont')) {
 			document.getElementById('eventsCont').innerHTML = '';
 		}
 		container.appendChild(listCont);
-	}
+	};
 
-	eventCalendar.prototype.showMoreEvents = function(){
+	eventCalendar.prototype.showLessEvents = function() {
 		let eventsListDiv = document.getElementById('eventsList');
 		let eventsDashboarCont = document.getElementById('eventsDashboard');
 		eventsListDiv.innerHTML = '';
 
 		that.eventsPagStartIndex = that.eventsPagIndex;
-		that.eventsPagIndex += that.eventsPageSize;
+		// that.eventsPagIndex -= (that.eventsPageSize * 2);
+
+		if(that.eventsPagIndex > 0){
+			that.eventsPagIndex -= that.eventsPageSize;
+		}
 		// console.log(that.eventsPagStartIndex);
-		// console.log(that.eventsPagIndex);
-		
+
 		// console.log(that.eventsResult);
 		let res = that.eventsResult.slice();
-		res = res.slice(that.eventsPagStartIndex, that.eventsPagIndex);
-		if(res.length === 0){
+		res = res.slice(that.eventsPagIndex, that.eventsPagStartIndex);
+		if (res.length === 0) {
 			return;
 		}
 		// console.log(that.eventsResult);
@@ -361,7 +367,33 @@ let eventCalendar = (function(calendarContainerId) {
 		//Here to redraw list with next events
 		let list = this.generateList('ul', res);
 		this.drawEvents(list, eventsDashboarCont);
-	}
+	};
+
+	eventCalendar.prototype.showMoreEvents = function() {
+		let eventsListDiv = document.getElementById('eventsList');
+		let eventsDashboarCont = document.getElementById('eventsDashboard');
+		eventsListDiv.innerHTML = '';
+
+		let res = that.eventsResult.slice();
+		that.eventsPagStartIndex = that.eventsPagIndex;
+
+		if(that.eventsPagIndex < res.length * that.eventsPageSize){
+			that.eventsPagIndex += that.eventsPageSize;
+		}
+		// console.log(that.eventsPagStartIndex);
+		// console.log(that.eventsPagIndex);
+		
+		res = res.slice(that.eventsPagStartIndex, that.eventsPagIndex);
+		// console.log(that.eventsResult);
+		if (res.length === 0) {
+			return;
+		}
+		// console.log(that.eventsResult);
+
+		//Here to redraw list with next events
+		let list = this.generateList('ul', res);
+		this.drawEvents(list, eventsDashboarCont);
+	};
 
 	eventCalendar.prototype.showEventItems = function() {
 		let eventsDashboarCont = document.getElementById('eventsDashboard');
@@ -373,8 +405,8 @@ let eventCalendar = (function(calendarContainerId) {
 		let searchedDate = that.currentYear + '-' + month + '-' + dayNum;
 		that.eventsResult = that.eventsData.filter((x) => x.date == searchedDate);
 		let res = that.eventsResult.slice();
-		
-		if(that.eventsResult.length > 5){
+
+		if (that.eventsResult.length > 5) {
 			res = res.slice(that.eventsPagStartIndex, that.eventsPagIndex);
 			let nextPageBtn = document.createElement('a');
 			nextPageBtn.setAttribute('class', 'waves-effect waves-light btn');
@@ -382,13 +414,34 @@ let eventCalendar = (function(calendarContainerId) {
 			nextPageBtn.onclick = () => this.showMoreEvents();
 			eventsDashboarCont.appendChild(nextPageBtn);
 
+			let showPrevEventsBtn = document.createElement('a');
+			showPrevEventsBtn.setAttribute('class', 'waves-effect waves-light btn');
+			showPrevEventsBtn.innerText = 'Show Previous';
+			showPrevEventsBtn.onclick = () => this.showLessEvents();
+			eventsDashboarCont.appendChild(showPrevEventsBtn);
 		}
-		
+
 		let list = this.generateList('ul', res);
 		this.drawEvents(list, eventsDashboarCont);
 		// eventsDashboarCont.appendChild(list);
-		
 	};
+
+	eventCalendar.prototype.clearContainerById = function(id){
+		if (document.getElementById(id)) {
+			document.getElementById(id).innerHTML = '';
+		}
+	}
+
+	eventCalendar.prototype.closeEventWindow = function(){
+		if(document.getElementById('eventsContainer')){
+			// document.getElementById('eventsContainer').innerHTML = '';
+			document.getElementById('eventsContainer').style.visibility = 'hidden';
+			// document.getElementById('eventsContainer').remove();
+			that.eventWindowToggled = false;
+			this.clearContainerById('addEventCont');
+			this.clearContainerById('eventsDashboard');
+		}
+	}
 
 	eventCalendar.prototype.showDate = function(e) {
 		let dayNum = parseInt(e.target.innerText) < 10 ? '0' + e.target.innerText : e.target.innerText;
@@ -409,18 +462,26 @@ let eventCalendar = (function(calendarContainerId) {
 				addEventContDiv.setAttribute('id', 'addEventCont');
 				document.getElementById('eventsDashboard').appendChild(addEventContDiv);
 			}
+			let closeWindowBtn = document.createElement('a');
+			closeWindowBtn.setAttribute('class', 'waves-effect waves-light btn');
+			closeWindowBtn.innerText = 'X';
+			closeWindowBtn.onclick = () => this.closeEventWindow();
+			// document.getElementById('addEventCont').innerHTML = '';
+			this.clearContainerById('addEventCont');
 			document.getElementById('addEventCont').appendChild(addEventBtn);
 			document.getElementById('addEventCont').appendChild(showEventItemsBtn);
+			// document.getElementById('closeWindowBtnCont').innerHTML = '';
+			this.clearContainerById('closeWindowBtnCont');
+			document.getElementById('closeWindowBtnCont').appendChild(closeWindowBtn);
 			document.getElementById('mainDateLabel').innerText = e.target.innerText;
 			document.getElementById('dayName').innerText = nameOfDay;
+			document.getElementById('yearField').innerText = document.getElementById('yearLabel').innerText;
+			document.getElementById('nameOfMonth').innerText = document.getElementById('monthLabel').innerText;
 			document.getElementById('eventsContainer').style.visibility = 'visible';
 		} else {
-			if (document.getElementById('addEventCont')) {
-				document.getElementById('addEventCont').innerHTML = '';
-			}
-
-			document.getElementById('eventsDashboard').innerHTML = '';
-
+			this.clearContainerById('addEventCont');
+			this.clearContainerById('eventsDashboard');
+		
 			// if (document.getElementById('createEventForm')) {
 			// 	let form = document.getElementById('createEventForm');
 			// 	document.getElementById('eventsDashboard').removeChild(form);
