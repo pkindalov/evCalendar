@@ -54,6 +54,22 @@
         let evCalendar = new eventCalendar();
         evCalendar.setContainer('simpleCalendarContainer');
         evCalendar.createCalendar();
+
+        let dataEvents = [
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Mother\'s birthday'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Father\'s birthday'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'My brother wife\'s birthday'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'My brother  birthday'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
+            {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
+        ];
+
+        evCalendar.setData(dataEvents);
         // let todayNum = evCalendar.getTodayNum();
        
         // let dateLabel = document.getElementById('mainDateLabel');

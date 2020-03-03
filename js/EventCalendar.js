@@ -14,6 +14,10 @@ let eventCalendar = (function(calendarContainerId) {
 	that.eventsContainer = null;
 	that.eventWindowToggled = false;
 	that.eventsData = [];
+	that.eventsPagStartIndex = 0;
+	that.eventsPagIndex = 5;
+	that.eventsPageSize = 5;
+	that.eventsResult = null;
 
 	function eventCalendar() {}
 
@@ -40,7 +44,11 @@ let eventCalendar = (function(calendarContainerId) {
 	};
 
 	eventCalendar.prototype.setData = function(data) {
-		//TO FINISH THIS LATER. HERE SET DATA FROM OUTER WORLD ABOUT EVENTS DATA
+		if (!data) {
+			throw new Error('Invalid data. Please give array with objects');
+			return;
+		}
+		that.eventsData = data;
 	};
 
 	eventCalendar.prototype.setCurrentMonthNum = function(date) {
@@ -277,6 +285,111 @@ let eventCalendar = (function(calendarContainerId) {
 		let instances = M.Timepicker.init(elems, { twelveHour: false, showClearBtn: true });
 	};
 
+	eventCalendar.prototype.createList = function(type, data) {
+		let listCont = document.createElement(type);
+			listCont.setAttribute('id', 'eventsCont');
+		li = null;
+
+		for (let event of data) {
+			li = document.createElement('li');
+			li.innerText = `${event.date} - ${event.from} : ${event.to} - ${event.text}`;
+			listCont.appendChild(li);
+		}
+
+		return listCont;
+	};
+
+	eventCalendar.prototype.generateList = function(type, data) {
+		if (!data || data.length === 0) {
+			// throw new Error('Problem with data. Invalid or no content. You must pass an array with objects');
+			let list = type == 'ul' ? document.createElement('ul') : document.createElement('ol');
+			list.setAttribute('id', 'eventsCont');
+			let li = document.createElement('li');
+			li.innerText = 'No events';
+			list.appendChild(li);
+			return list;
+		}
+
+		let listCont = null;
+
+		switch (type) {
+			case 'ul':
+				listCont = this.createList('ul', data);
+				return listCont;
+				break;
+			case 'ol':
+				listCont = this.createList('ol', data);
+				break;
+			default:
+				listCont = this.createList('ul', data);
+				return listCont;
+				break;
+		}
+	};
+
+	eventCalendar.prototype.drawEvents = function(eventsDataList, container){
+		let listCont = document.createElement('div');
+		listCont.setAttribute('id', 'eventsList');
+		listCont.setAttribute('class', 'flow-text');
+		// listCont.style.overflow = 'scroll';
+		listCont.appendChild(eventsDataList);
+
+		if(document.getElementById('eventsCont')){
+			document.getElementById('eventsCont').innerHTML = '';
+		}
+		container.appendChild(listCont);
+	}
+
+	eventCalendar.prototype.showMoreEvents = function(){
+		let eventsListDiv = document.getElementById('eventsList');
+		let eventsDashboarCont = document.getElementById('eventsDashboard');
+		eventsListDiv.innerHTML = '';
+
+		that.eventsPagStartIndex = that.eventsPagIndex;
+		that.eventsPagIndex += that.eventsPageSize;
+		// console.log(that.eventsPagStartIndex);
+		// console.log(that.eventsPagIndex);
+		
+		// console.log(that.eventsResult);
+		let res = that.eventsResult.slice();
+		res = res.slice(that.eventsPagStartIndex, that.eventsPagIndex);
+		if(res.length === 0){
+			return;
+		}
+		// console.log(that.eventsResult);
+
+		//Here to redraw list with next events
+		let list = this.generateList('ul', res);
+		this.drawEvents(list, eventsDashboarCont);
+	}
+
+	eventCalendar.prototype.showEventItems = function() {
+		let eventsDashboarCont = document.getElementById('eventsDashboard');
+		eventsDashboarCont.innerHTML = '';
+		let dayNum = parseInt(document.getElementById('mainDateLabel').innerText);
+		dayNum = dayNum < 10 ? '0' + dayNum : dayNum;
+		let month = that.currentMonthNum + 1;
+		month = month < 10 ? '0' + month : month;
+		let searchedDate = that.currentYear + '-' + month + '-' + dayNum;
+		that.eventsResult = that.eventsData.filter((x) => x.date == searchedDate);
+		let res = that.eventsResult.slice();
+		
+		if(that.eventsResult.length > 5){
+			res = res.slice(that.eventsPagStartIndex, that.eventsPagIndex);
+			let nextPageBtn = document.createElement('a');
+			nextPageBtn.setAttribute('class', 'waves-effect waves-light btn');
+			nextPageBtn.innerText = 'Show More';
+			nextPageBtn.onclick = () => this.showMoreEvents();
+			eventsDashboarCont.appendChild(nextPageBtn);
+
+		}
+		
+		let list = this.generateList('ul', res);
+		this.drawEvents(list, eventsDashboarCont);
+		// eventsDashboarCont.appendChild(list);
+		
+	};
+
 	eventCalendar.prototype.showDate = function(e) {
 		let dayNum = parseInt(e.target.innerText) < 10 ? '0' + e.target.innerText : e.target.innerText;
 		let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
@@ -287,12 +400,17 @@ let eventCalendar = (function(calendarContainerId) {
 			addEventBtn.setAttribute('class', 'waves-effect waves-light btn');
 			addEventBtn.innerText = 'Add event';
 			addEventBtn.onclick = () => this.addEventForm();
-			if(!document.getElementById('addEventCont')){
+			let showEventItemsBtn = document.createElement('a');
+			showEventItemsBtn.setAttribute('class', 'waves-effect waves-light btn');
+			showEventItemsBtn.innerText = 'Show Events';
+			showEventItemsBtn.onclick = () => this.showEventItems();
+			if (!document.getElementById('addEventCont')) {
 				let addEventContDiv = document.createElement('div');
 				addEventContDiv.setAttribute('id', 'addEventCont');
-				document.getElementById(eventsDashboard).appendChild(addEventContDiv);
-			} 
+				document.getElementById('eventsDashboard').appendChild(addEventContDiv);
+			}
 			document.getElementById('addEventCont').appendChild(addEventBtn);
+			document.getElementById('addEventCont').appendChild(showEventItemsBtn);
 			document.getElementById('mainDateLabel').innerText = e.target.innerText;
 			document.getElementById('dayName').innerText = nameOfDay;
 			document.getElementById('eventsContainer').style.visibility = 'visible';
@@ -301,10 +419,14 @@ let eventCalendar = (function(calendarContainerId) {
 				document.getElementById('addEventCont').innerHTML = '';
 			}
 
-			if(document.getElementById('createEventForm')){
-				let form = document.getElementById('createEventForm');
-				document.getElementById('eventsDashboard').removeChild(form);
-			}
+			document.getElementById('eventsDashboard').innerHTML = '';
+
+			// if (document.getElementById('createEventForm')) {
+			// 	let form = document.getElementById('createEventForm');
+			// 	document.getElementById('eventsDashboard').removeChild(form);
+
+			// }
+
 			// if(document.getElementById('eventsDashboard')){
 			// 	document.getElementById('eventsDashboard').innerHTML = '';
 			// }
