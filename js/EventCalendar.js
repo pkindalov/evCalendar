@@ -469,7 +469,9 @@ let eventCalendar = (function(calendarContainerId) {
 			// document.getElementById('addEventCont').innerHTML = '';
 			this.clearContainerById('addEventCont');
 			document.getElementById('addEventCont').appendChild(addEventBtn);
-			document.getElementById('addEventCont').appendChild(showEventItemsBtn);
+			if(this.checkDayForEvents(dayNum)){
+				document.getElementById('addEventCont').appendChild(showEventItemsBtn);
+			}
 			// document.getElementById('closeWindowBtnCont').innerHTML = '';
 			this.clearContainerById('closeWindowBtnCont');
 			document.getElementById('closeWindowBtnCont').appendChild(closeWindowBtn);
@@ -495,6 +497,18 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 		// console.log(e.target.innerText);
 	};
+
+	eventCalendar.prototype.checkDayForEvents = function(day){
+		if(!that.eventsData || that.eventsData.length === 0){
+			return;
+		}
+
+		let month = (that.currentMonthNum + 1) < 10 ? '0' + (that.currentMonthNum + 1) : that.currentMonthNum + 1;
+		let currentDay = parseInt(day) < 10 ? '0' + (parseInt(day)) : day; 
+		let searchedDate = that.currentYear + '-' + month + '-' + currentDay;
+		let result = that.eventsData.filter(event => event.date === searchedDate);
+		return result.length > 0;
+	}
 
 	eventCalendar.prototype.drawCalendarBody = function() {
 		// let tbodyRowsForRem = document.getElementsByTagName('tbody');
@@ -532,6 +546,15 @@ let eventCalendar = (function(calendarContainerId) {
 				} else {
 					//if it is NOT in indexToStartDays then write day number in cell.
 					td.innerText = dayNum;
+					if(this.checkDayForEvents(dayNum)){
+						let eventSpanSymbol = document.createElement('span');
+						eventSpanSymbol.setAttribute('class', 'eventDot');
+						// eventSpanSymbol.style.background = 'green';
+						// eventSpanSymbol.style.height = '10px';
+						// eventSpanSymbol.style.width = '10px';
+						// eventSpanSymbol.style.borderRadius = '50%';
+						td.appendChild(eventSpanSymbol);
+					}
 					td.setAttribute('id', `day${dayNum}`);
 					td.onclick = (e) => this.showDate(e);
 					if (dayNum == that.todayNum) {

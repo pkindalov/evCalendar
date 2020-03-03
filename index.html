@@ -56,8 +56,6 @@
     <script>
         let evCalendar = new eventCalendar();
         evCalendar.setContainer('simpleCalendarContainer');
-        evCalendar.createCalendar();
-
         let dataEvents = [
             {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Mother\'s birthday'},
             {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Father\'s birthday'},
@@ -70,9 +68,13 @@
             {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
             {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
             {date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
+            {date: '2020-01-15', from: '00:00:00', to: '18:00:00', text: 'Имам рожден ден :) '},
+            {date: '2020-03-03', from: '00:00:00', to: '18:00:00', text: 'Национален празник по случай освобождението на България'},
         ];
-
         evCalendar.setData(dataEvents);
+        evCalendar.createCalendar();
+        
+
         // let todayNum = evCalendar.getTodayNum();
        
         // let dateLabel = document.getElementById('mainDateLabel');
