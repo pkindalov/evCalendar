@@ -262,6 +262,23 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 	};
 
+	eventCalendar.prototype.createLocalEvent = function(){
+		let hoursBegin = document.getElementsByName('hoursBegin')[0].value;
+		let hoursFinish = document.getElementsByName('hoursFinish')[0].value;
+		let eventTextName = document.getElementsByName('eventTextName')[0].value;
+		let day = parseInt(document.getElementById('mainDateLabel').innerText);
+		day = day < 10 ? '0' + day : day;
+		let month = that.currentMonthNum + 1;
+		let year = that.currentYear;
+		month = month < 10 ? '0' + month : month;
+		let date = year + '-' + month + '-' + day;
+		let eventObj = {id: that.eventsData.length + 1, date: date, from: hoursBegin, to: hoursFinish, text: eventTextName};
+		that.eventsData.push(eventObj);
+		this.closeEventWindow();
+		this.drawCalendarBody();
+		// {id: 11, date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
+	}
+
 	eventCalendar.prototype.addEventForm = function() {
 		// alert(document.getElementById('mainDateLabel').innerText);
 		let eventsDashboard = document.getElementById('eventsDashboard');
@@ -273,13 +290,17 @@ let eventCalendar = (function(calendarContainerId) {
 				  <label for="hoursFinish">Finish</label>
 				  <input type="text" name="hoursFinish" class="timepicker" />  
 				  <label for="eventText">Text</label>
-				  <textarea id="eventText" class="materialize-textarea"></textarea>
+				  <textarea id="eventText" name="eventTextName" class="materialize-textarea"></textarea>
+				  <a id="createLocalEvent" href="#" class="waves-effect waves-light btn">CREATE STATIC EVENT</a>
 				  <input type="submit" class="waves-effect waves-light btn" value="Create Event" />
 				  <input type="reset" class="waves-effect waves-light btn" value="Clear" />
 			</form>
 		`;
 
 		eventsDashboard.innerHTML += form;
+		
+		let createLocalEventBtn = document.getElementById('createLocalEvent');
+		createLocalEventBtn.addEventListener('click', () => this.createLocalEvent());
 
 		let elems = document.querySelectorAll('.timepicker');
 		let instances = M.Timepicker.init(elems, { twelveHour: false, showClearBtn: true });
@@ -633,6 +654,7 @@ let eventCalendar = (function(calendarContainerId) {
 
 		let nextYearBtn = document.getElementById('nextYear');
 		nextYearBtn.addEventListener('click', () => this.nextYear());
+
 	};
 
 	eventCalendar.prototype.createCalendar = function() {
