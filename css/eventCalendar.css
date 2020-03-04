@@ -84,3 +84,7 @@ td:hover{
     margin: 0 auto;
 }
 
+.eventBtns, .editDelBtns{
+    margin-left: 10px;
+}
+

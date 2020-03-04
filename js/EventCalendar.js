@@ -293,6 +293,16 @@ let eventCalendar = (function(calendarContainerId) {
 		for (let event of data) {
 			li = document.createElement('li');
 			li.innerText = `${event.date} - ${event.from} : ${event.to} - ${event.text}`;
+			let editBtn = document.createElement('a');
+			let deleteBtn = document.createElement('a');
+			editBtn.setAttribute('class', 'waves-effect waves-light btn editDelBtns');
+			editBtn.setAttribute('href', `/editEvent/${event.id}`);
+			editBtn.innerText = 'Edit';
+			deleteBtn.setAttribute('class', 'waves-effect red accent-4 btn editDelBtns');
+			deleteBtn.setAttribute('href', `/deleteEvent/${event.id}`);
+			deleteBtn.innerText = 'Delete';
+			li.appendChild(editBtn);
+			li.appendChild(deleteBtn);
 			listCont.appendChild(li);
 		}
 
@@ -454,7 +464,7 @@ let eventCalendar = (function(calendarContainerId) {
 			addEventBtn.innerText = 'Add event';
 			addEventBtn.onclick = () => this.addEventForm();
 			let showEventItemsBtn = document.createElement('a');
-			showEventItemsBtn.setAttribute('class', 'waves-effect waves-light btn');
+			showEventItemsBtn.setAttribute('class', 'waves-effect waves-light btn eventBtns');
 			showEventItemsBtn.innerText = 'Show Events';
 			showEventItemsBtn.onclick = () => this.showEventItems();
 			if (!document.getElementById('addEventCont')) {
