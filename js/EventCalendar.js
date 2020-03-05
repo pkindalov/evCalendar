@@ -279,6 +279,59 @@ let eventCalendar = (function(calendarContainerId) {
 		// {id: 11, date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
 	}
 
+	eventCalendar.prototype.getIndexOfSearchedEvent = function(prop, keyword, data){
+		let index = -1;
+		for(let i = 0; i < data.length; i++){
+			if(data[i][prop] === keyword){
+				index = i;
+			}
+		}
+
+		return index;
+	}
+
+	eventCalendar.prototype.editingLocalEvent = function(){
+		let hoursBegin = document.getElementsByName('hoursBegin')[0].value;
+		let hoursFinish = document.getElementsByName('hoursFinish')[0].value;
+		let eventTextName = document.getElementsByName('eventTextName')[0].value;
+		let day = parseInt(document.getElementById('mainDateLabel').innerText);
+		let editedDate = document.getElementsByName('editedDate')[0].value;
+		day = day < 10 ? '0' + day : day;
+		let month = that.currentMonthNum + 1;
+		let year = that.currentYear;
+		month = month < 10 ? '0' + month : month;
+		let date = year + '-' + month + '-' + day;
+		
+		// let eventIndex = that.eventsData.filter((event, index) => {
+		// 	if(event.date === date) return index;
+		// });
+		let eventIndex = this.getIndexOfSearchedEvent('date' ,date, that.eventsData);
+		if(eventIndex < 0){
+			alert('No event found.There must be some error');
+			throw new Error('No such event found');
+			return;
+		}
+
+		let event = that.eventsData[eventIndex];
+		event.date = editedDate;
+		event.from = hoursBegin;
+		event.to = hoursFinish;
+		event.text = eventTextName;
+		// for(let i = 0; i < that.eventsData.length; i++){
+		// 	if(that.eventsData[i].date === date){
+		// 		eventIndex = i;
+		// 	}
+		// }
+
+		// console.log(that.eventsData[eventIndex]);
+
+		// return;
+		// let eventObj = {id: that.eventsData.length + 1, date: date, from: hoursBegin, to: hoursFinish, text: eventTextName};
+		// that.eventsData.push(eventObj);
+		this.closeEventWindow();
+		this.drawCalendarBody();
+	}
+
 	eventCalendar.prototype.addEventForm = function() {
 		// alert(document.getElementById('mainDateLabel').innerText);
 		let eventsDashboard = document.getElementById('eventsDashboard');
@@ -306,6 +359,55 @@ let eventCalendar = (function(calendarContainerId) {
 		let instances = M.Timepicker.init(elems, { twelveHour: false, showClearBtn: true });
 	};
 
+	eventCalendar.prototype.editLocalEvent = function(event){
+		
+		let eventsDashboard = document.getElementById('eventsDashboard');
+		eventsDashboard.innerHTML = '<div id="addEventCont"></div>';
+		let form = `
+			<form id="editEventForm" action="#" method="post">
+			<label for="editDate">Date</label>
+			<input type="text" name="editedDate" class="datepicker" value="${event.date}" />
+				<label for="hoursBegin">Begin</label>
+				  <input type="text" name="hoursBegin" value="${event.from}" class="timepicker" />
+				  <label for="hoursFinish">Finish</label>
+				  <input type="text" name="hoursFinish" value="${event.to}" class="timepicker" />  
+				  <label for="eventText">Text</label>
+				  <textarea id="eventText" name="eventTextName" class="materialize-textarea">${event.text}</textarea>
+				  <a id="editLocalEvent" href="#" class="waves-effect waves-light btn">Edit STATIC EVENT</a>
+				  <input type="submit" class="waves-effect waves-light btn" value="Edit Event" />
+				  <input type="reset" class="waves-effect waves-light btn" value="Clear" />
+			</form>
+		`;
+
+		eventsDashboard.innerHTML += form;
+		
+		let editLocalEventBtn = document.getElementById('editLocalEvent');
+		editLocalEventBtn.addEventListener('click', () => this.editingLocalEvent());
+
+		let elems = document.querySelectorAll('.timepicker');
+		let datePickElems = document.querySelectorAll('.datepicker');
+		let instances = M.Timepicker.init(elems, { twelveHour: false, showClearBtn: true });
+		let dateInstances = M.Datepicker.init(datePickElems, {format: 'yyyy-mm-dd',showClearBtn: true });
+	}
+
+	eventCalendar.prototype.deleteLocalEvent = function(event){
+		let eventIndex = this.getIndexOfSearchedEvent('id', event.id, that.eventsData);
+		if(eventIndex < 0){
+			alert('No event found.There must be some error');
+			throw new Error('No such event found');
+			return;
+		}
+
+		let confirmDelete = confirm(`Are you sure to delete event from ${event.date} and text ${event.text}?`);
+		if(confirmDelete){
+			that.eventsData.splice(eventIndex, 1);
+		}
+
+		this.closeEventWindow();
+		this.drawCalendarBody();
+		// console.log(eventIndex);
+	}
+
 	eventCalendar.prototype.createList = function(type, data) {
 		let listCont = document.createElement(type);
 		listCont.setAttribute('id', 'eventsCont');
@@ -317,10 +419,13 @@ let eventCalendar = (function(calendarContainerId) {
 			let editBtn = document.createElement('a');
 			let deleteBtn = document.createElement('a');
 			editBtn.setAttribute('class', 'waves-effect waves-light btn editDelBtns');
-			editBtn.setAttribute('href', `/editEvent/${event.id}`);
+			// editBtn.setAttribute('href', `/editEvent/${event.id}`);
+			editBtn.setAttribute('href', `#`);
 			editBtn.innerText = 'Edit';
+			editBtn.onclick = () => this.editLocalEvent(event); 
 			deleteBtn.setAttribute('class', 'waves-effect red accent-4 btn editDelBtns');
-			deleteBtn.setAttribute('href', `/deleteEvent/${event.id}`);
+			// deleteBtn.setAttribute('href', `/deleteEvent/${event.id}`);
+			deleteBtn.onclick = () => this.deleteLocalEvent(event);
 			deleteBtn.innerText = 'Delete';
 			li.appendChild(editBtn);
 			li.appendChild(deleteBtn);
