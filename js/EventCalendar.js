@@ -8,6 +8,7 @@ let eventCalendar = (function(calendarContainerId) {
 	that.currentMontName = null;
 	that.currentMontCountOfDays = null;
 	that.currentYear = null;
+	that.currentlySelectedDay = null;
 	that.indexToStartDays = null;
 	that.firstDayOfMonth = null;
 	that.todayNum = null;
@@ -534,12 +535,13 @@ let eventCalendar = (function(calendarContainerId) {
 	eventCalendar.prototype.showEventItems = function() {
 		let eventsDashboarCont = document.getElementById('eventsDashboard');
 		eventsDashboarCont.innerHTML = '';
-		let dayNum = parseInt(document.getElementById('mainDateLabel').innerText);
+		let dayNum =  !parseInt(document.getElementById('mainDateLabel').innerText) ? that.currentlySelectedDay : parseInt(document.getElementById('mainDateLabel').innerText);
 		dayNum = dayNum < 10 ? '0' + dayNum : dayNum;
 		let month = that.currentMonthNum + 1;
 		month = month < 10 ? '0' + month : month;
 		let searchedDate = that.currentYear + '-' + month + '-' + dayNum;
-		that.eventsResult = that.eventsData.filter((x) => x.date == searchedDate);
+		that.eventsResult = that.eventsData.filter((x) => x.date === searchedDate);
+		// console.log(that.eventsResult);
 		let res = that.eventsResult.slice();
 
 		if (that.eventsResult.length > 5) {
@@ -585,6 +587,8 @@ let eventCalendar = (function(calendarContainerId) {
 			if(!e.target.innerText && !day){
 				return;
 			}
+
+			that.currentlySelectedDay = day;
 			let dayNum = parseInt(day) < 10 ? '0' + day : day;
 			let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
 			let addEventBtn = document.createElement('a');
@@ -613,7 +617,7 @@ let eventCalendar = (function(calendarContainerId) {
 			// document.getElementById('closeWindowBtnCont').innerHTML = '';
 			this.clearContainerById('closeWindowBtnCont');
 			document.getElementById('closeWindowBtnCont').appendChild(closeWindowBtn);
-			document.getElementById('mainDateLabel').innerText = e.target.innerText;
+			document.getElementById('mainDateLabel').innerText = !e.target.innerText ? day : e.target.innerText;
 			document.getElementById('dayName').innerText = nameOfDay;
 			document.getElementById('yearField').innerText = document.getElementById('yearLabel').innerText;
 			document.getElementById('nameOfMonth').innerText = document.getElementById('monthLabel').innerText;
