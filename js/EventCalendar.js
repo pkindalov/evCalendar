@@ -579,12 +579,14 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 	}
 
-	eventCalendar.prototype.showDate = function(e) {
-		let dayNum = parseInt(e.target.innerText) < 10 ? '0' + e.target.innerText : e.target.innerText;
-		let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
-
+	eventCalendar.prototype.showDate = function(e, day) {
 		that.eventWindowToggled = !that.eventWindowToggled;
 		if (that.eventWindowToggled) {
+			if(!e.target.innerText && !day){
+				return;
+			}
+			let dayNum = parseInt(day) < 10 ? '0' + day : day;
+			let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
 			let addEventBtn = document.createElement('a');
 			addEventBtn.setAttribute('class', 'waves-effect waves-light btn');
 			addEventBtn.innerText = 'Add event';
@@ -629,7 +631,7 @@ let eventCalendar = (function(calendarContainerId) {
 			// if(document.getElementById('eventsDashboard')){
 			// 	document.getElementById('eventsDashboard').innerHTML = '';
 			// }
-			document.getElementById('eventsContainer').style.visibility = 'hidden';
+			// document.getElementById('eventsContainer').style.visibility = 'hidden';
 		}
 		// console.log(e.target.innerText);
 	};
@@ -674,13 +676,15 @@ let eventCalendar = (function(calendarContainerId) {
 				//check if the index is in indexToStartDays. If it is then the cell must be empty
 				if (day + counter < that.indexToStartDays || dayNum > that.currentMontCountOfDays) {
 					if ((day == 5 || day == 6) && td.innerText != '') {
+						let num = dayNum;
 						td.setAttribute('class', '#1e88e5 blue light-1');
 						td.setAttribute('id', `day${dayNum}`);
-						td.onclick = (e) => this.showDate(e);
+						td.onclick = (e) => this.showDate(e, num);
 					}
 					tr.append(td);
 				} else {
 					//if it is NOT in indexToStartDays then write day number in cell.
+					
 					td.innerText = dayNum;
 					if(this.checkDayForEvents(dayNum)){
 						let eventSpanSymbol = document.createElement('span');
@@ -691,17 +695,18 @@ let eventCalendar = (function(calendarContainerId) {
 						// eventSpanSymbol.style.borderRadius = '50%';
 						td.appendChild(eventSpanSymbol);
 					}
+					let num = dayNum;
 					td.setAttribute('id', `day${dayNum}`);
-					td.onclick = (e) => this.showDate(e);
+					td.onclick = (e) => this.showDate(e, num);
 					if (dayNum == that.todayNum) {
 						td.setAttribute('class', '#1e88e5 blue light-1');
-						td.onclick = (e) => this.showDate(e);
+						td.onclick = (e) => this.showDate(e,num);
 					}
 
 					if ((day == 5 || day == 6) && td.innerText != '') {
 						td.setAttribute('class', '#1e88e5 blue light-1');
 						td.setAttribute('id', `day${dayNum}`);
-						td.onclick = (e) => this.showDate(e);
+						td.onclick = (e) => this.showDate(e, num);
 					}
 					tr.append(td);
 					dayNum++;
