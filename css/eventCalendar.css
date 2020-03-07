@@ -21,6 +21,7 @@ td:hover{
 
 .container{
     margin-top: 20px;
+    margin-bottom: 20px;
     border-radius: 5px;
     border:  5px solid #1e88e5;
 }
@@ -28,6 +29,13 @@ td:hover{
     border: 1px solid red;
 } */
 
+#dayName{
+    /* border: 1px solid red;
+    background-color: red; */
+    height: 80px;
+    text-align: center;
+    font-size: xx-large;
+}
 
 #eventsContainer{
     background-color: #1e88e5;
@@ -37,6 +45,13 @@ td:hover{
     margin-left: 29.5%;
     visibility: hidden;
 }
+
+#eventsList{
+    overflow: scroll;
+    height: 350px;
+    font-size: 15px;
+}
+
 
 /* @media(min-width: 1100px){
     #eventsContainer{
@@ -55,13 +70,7 @@ td:hover{
     height: 600px;
 }
 
-#dayName{
-    /* border: 1px solid red;
-    background-color: red; */
-    height: 80px;
-    text-align: center;
-    font-size: xx-large;
-}
+
 
 .dateLabel, .monthLabel, .yearLabel{
     /* border: 1px solid red;
@@ -88,3 +97,163 @@ td:hover{
     margin-left: 10px;
 }
 
+#eventsList{
+    overflow: auto;
+}
+
+
+@media(min-width: 375px) and (max-width: 500px){
+    #eventsSection{
+        width: 100%;
+    }
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 77%;
+        width: 50%;
+        margin-left: 38%;
+        /* visibility: hidden; */
+    }
+
+    #mainDateLabel, #nameOfMonth, #yearField, #dayName,
+    .dateLabel, .monthLabel, .yearLabel{
+        font-size: 25px;
+        height: 20%;
+    }
+
+    #eventsList{
+        overflow: scroll;
+        height: 350px;
+        font-size: 15px;
+    }
+}
+
+@media(min-width: 502px) and (max-width: 600px){
+    #eventsSection{
+        width: 100%;
+    }
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 77%;
+        width: 51%;
+        margin-left: 38%;
+        /* visibility: hidden; */
+    }
+
+    #mainDateLabel, #nameOfMonth, #yearField, #dayName,
+    .dateLabel, .monthLabel, .yearLabel{
+        font-size: 25px;
+        height: 20%;
+    }
+
+    #eventsList{
+        overflow: scroll;
+        height: 350px;
+        font-size: 15px;
+    }
+}
+
+@media(min-width: 601px) and (max-width: 992px){
+    #eventsSection{
+        width: 100%;
+    }
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 77%;
+        width: 46%;
+        margin-left: 38%;
+        /* visibility: hidden; */
+    }
+
+    #mainDateLabel, #nameOfMonth, #yearField, #dayName,
+    .dateLabel, .monthLabel, .yearLabel{
+        font-size: 25px;
+        height: 20%;
+    }
+
+    #eventsList{
+        overflow: scroll;
+        height: 350px;
+        font-size: 15px;
+    }
+}
+
+@media(min-width: 993px) and (max-width: 1200px){
+    #eventsSection{
+        width: 100%;
+    }
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 77%;
+        width: 31.5%;
+        margin-left: 38%;
+        /* visibility: hidden; */
+    }
+
+    #mainDateLabel, #nameOfMonth, #yearField, #dayName,
+    .dateLabel, .monthLabel, .yearLabel{
+        font-size: 25px;
+        height: 20%;
+    }
+
+    #eventsList{
+        overflow: scroll;
+        height: 350px;
+        font-size: 15px;
+    }
+}
+
+/* @media(min-width: 1838px) and (max-width: 1845px){
+    #eventsSection{
+        width: 100%;
+    }
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 77%;
+        width: 31.2%;
+        margin-left: 38%;
+    }
+
+    #mainDateLabel, #nameOfMonth, #yearField, #dayName,
+    .dateLabel, .monthLabel, .yearLabel{
+        font-size: 25px;
+        height: 20%;
+    }
+
+    #eventsList{
+        overflow: scroll;
+        height: 350px;
+        font-size: 15px;
+    }
+} */
+
+
+
+/* @media(min-width: 1846px){
+    #eventsSection{
+        width: 100%;
+    }
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: 77%;
+        width: 31%;
+        margin-left: 38%;
+    }
+
+    #mainDateLabel, #nameOfMonth, #yearField, #dayName,
+    .dateLabel, .monthLabel, .yearLabel{
+        font-size: 25px;
+        height: 20%;
+    }
+
+    #eventsList{
+        overflow: scroll;
+        height: 350px;
+        font-size: 15px;
+    }
+} */
