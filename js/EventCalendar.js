@@ -263,7 +263,7 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 	};
 
-	eventCalendar.prototype.createLocalEvent = function(){
+	eventCalendar.prototype.createLocalEvent = function() {
 		let hoursBegin = document.getElementsByName('hoursBegin')[0].value;
 		let hoursFinish = document.getElementsByName('hoursFinish')[0].value;
 		let eventTextName = document.getElementsByName('eventTextName')[0].value;
@@ -273,25 +273,31 @@ let eventCalendar = (function(calendarContainerId) {
 		let year = that.currentYear;
 		month = month < 10 ? '0' + month : month;
 		let date = year + '-' + month + '-' + day;
-		let eventObj = {id: that.eventsData.length + 1, date: date, from: hoursBegin, to: hoursFinish, text: eventTextName};
+		let eventObj = {
+			id: that.eventsData.length + 1,
+			date: date,
+			from: hoursBegin,
+			to: hoursFinish,
+			text: eventTextName
+		};
 		that.eventsData.push(eventObj);
 		this.closeEventWindow();
 		this.drawCalendarBody();
 		// {id: 11, date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Work meeting'},
-	}
+	};
 
-	eventCalendar.prototype.getIndexOfSearchedEvent = function(prop, keyword, data){
+	eventCalendar.prototype.getIndexOfSearchedEvent = function(prop, keyword, data) {
 		let index = -1;
-		for(let i = 0; i < data.length; i++){
-			if(data[i][prop] === keyword){
+		for (let i = 0; i < data.length; i++) {
+			if (data[i][prop] === keyword) {
 				index = i;
 			}
 		}
 
 		return index;
-	}
+	};
 
-	eventCalendar.prototype.editingLocalEvent = function(){
+	eventCalendar.prototype.editingLocalEvent = function() {
 		let hoursBegin = document.getElementsByName('hoursBegin')[0].value;
 		let hoursFinish = document.getElementsByName('hoursFinish')[0].value;
 		let eventTextName = document.getElementsByName('eventTextName')[0].value;
@@ -302,12 +308,12 @@ let eventCalendar = (function(calendarContainerId) {
 		let year = that.currentYear;
 		month = month < 10 ? '0' + month : month;
 		let date = year + '-' + month + '-' + day;
-		
+
 		// let eventIndex = that.eventsData.filter((event, index) => {
 		// 	if(event.date === date) return index;
 		// });
-		let eventIndex = this.getIndexOfSearchedEvent('date' ,date, that.eventsData);
-		if(eventIndex < 0){
+		let eventIndex = this.getIndexOfSearchedEvent('date', date, that.eventsData);
+		if (eventIndex < 0) {
 			alert('No event found.There must be some error');
 			throw new Error('No such event found');
 			return;
@@ -331,7 +337,7 @@ let eventCalendar = (function(calendarContainerId) {
 		// that.eventsData.push(eventObj);
 		this.closeEventWindow();
 		this.drawCalendarBody();
-	}
+	};
 
 	eventCalendar.prototype.addEventForm = function() {
 		// alert(document.getElementById('mainDateLabel').innerText);
@@ -352,7 +358,7 @@ let eventCalendar = (function(calendarContainerId) {
 		`;
 
 		eventsDashboard.innerHTML += form;
-		
+
 		let createLocalEventBtn = document.getElementById('createLocalEvent');
 		createLocalEventBtn.addEventListener('click', () => this.createLocalEvent());
 
@@ -360,8 +366,7 @@ let eventCalendar = (function(calendarContainerId) {
 		let instances = M.Timepicker.init(elems, { twelveHour: false, showClearBtn: true });
 	};
 
-	eventCalendar.prototype.editLocalEvent = function(event){
-		
+	eventCalendar.prototype.editLocalEvent = function(event) {
 		let eventsDashboard = document.getElementById('eventsDashboard');
 		eventsDashboard.innerHTML = '<div id="addEventCont"></div>';
 		let form = `
@@ -381,35 +386,35 @@ let eventCalendar = (function(calendarContainerId) {
 		`;
 
 		eventsDashboard.innerHTML += form;
-		
+
 		let editLocalEventBtn = document.getElementById('editLocalEvent');
 		editLocalEventBtn.addEventListener('click', () => this.editingLocalEvent());
 
 		let elems = document.querySelectorAll('.timepicker');
 		let datePickElems = document.querySelectorAll('.datepicker');
 		let instances = M.Timepicker.init(elems, { twelveHour: false, showClearBtn: true });
-		let dateInstances = M.Datepicker.init(datePickElems, {format: 'yyyy-mm-dd',showClearBtn: true });
-	}
+		let dateInstances = M.Datepicker.init(datePickElems, { format: 'yyyy-mm-dd', showClearBtn: true });
+	};
 
-	eventCalendar.prototype.deleteLocalEvent = function(event){
+	eventCalendar.prototype.deleteLocalEvent = function(event) {
 		let eventIndex = this.getIndexOfSearchedEvent('id', event.id, that.eventsData);
-		if(eventIndex < 0){
+		if (eventIndex < 0) {
 			alert('No event found.There must be some error');
 			throw new Error('No such event found');
 			return;
 		}
 
 		let confirmDelete = confirm(`Are you sure to delete event from ${event.date} and text ${event.text}?`);
-		if(confirmDelete){
+		if (confirmDelete) {
 			that.eventsData.splice(eventIndex, 1);
 		}
 
 		this.closeEventWindow();
 		this.drawCalendarBody();
 		// console.log(eventIndex);
-	}
+	};
 
-	eventCalendar.prototype.createList = function(type, data) {
+	eventCalendar.prototype.createList = function(type, data, editDelBtns) {
 		let listCont = document.createElement(type);
 		listCont.setAttribute('id', 'eventsCont');
 		li = null;
@@ -417,30 +422,32 @@ let eventCalendar = (function(calendarContainerId) {
 		for (let event of data) {
 			li = document.createElement('li');
 			li.innerText = `${event.date} - ${event.from} : ${event.to} - ${event.text}`;
-			let editBtn = document.createElement('a');
-			let deleteBtn = document.createElement('a');
-			editBtn.setAttribute('class', 'waves-effect waves-light btn editDelBtns');
-			// editBtn.setAttribute('href', `/editEvent/${event.id}`);
-			editBtn.setAttribute('href', `#`);
-			editBtn.innerText = 'Edit';
-			editBtn.onclick = () => this.editLocalEvent(event); 
-			deleteBtn.setAttribute('class', 'waves-effect red accent-4 btn editDelBtns');
-			// deleteBtn.setAttribute('href', `/deleteEvent/${event.id}`);
-			deleteBtn.onclick = () => this.deleteLocalEvent(event);
-			deleteBtn.innerText = 'Delete';
-			li.appendChild(editBtn);
-			li.appendChild(deleteBtn);
+			if(editDelBtns){
+				let editBtn = document.createElement('a');
+				let deleteBtn = document.createElement('a');
+				editBtn.setAttribute('class', 'waves-effect waves-light btn editDelBtns');
+				// editBtn.setAttribute('href', `/editEvent/${event.id}`);
+				editBtn.setAttribute('href', `#`);
+				editBtn.innerText = 'Edit';
+				editBtn.onclick = () => this.editLocalEvent(event);
+				deleteBtn.setAttribute('class', 'waves-effect red accent-4 btn editDelBtns');
+				// deleteBtn.setAttribute('href', `/deleteEvent/${event.id}`);
+				deleteBtn.onclick = () => this.deleteLocalEvent(event);
+				deleteBtn.innerText = 'Delete';
+				li.appendChild(editBtn);
+				li.appendChild(deleteBtn);
+			}
 			listCont.appendChild(li);
 		}
 
 		return listCont;
 	};
 
-	eventCalendar.prototype.generateList = function(type, data) {
+	eventCalendar.prototype.generateList = function(type, data, listId, editDelBtns) {
 		if (!data || data.length === 0) {
 			// throw new Error('Problem with data. Invalid or no content. You must pass an array with objects');
 			let list = type == 'ul' ? document.createElement('ul') : document.createElement('ol');
-			list.setAttribute('id', 'eventsCont');
+			list.setAttribute('id', listId);
 			let li = document.createElement('li');
 			li.innerText = 'No events';
 			list.appendChild(li);
@@ -451,11 +458,11 @@ let eventCalendar = (function(calendarContainerId) {
 
 		switch (type) {
 			case 'ul':
-				listCont = this.createList('ul', data);
+				listCont = this.createList('ul', data, editDelBtns);
 				return listCont;
 				break;
 			case 'ol':
-				listCont = this.createList('ol', data);
+				listCont = this.createList('ol', data), editDelBtns;
 				break;
 			default:
 				listCont = this.createList('ul', data);
@@ -465,7 +472,7 @@ let eventCalendar = (function(calendarContainerId) {
 	};
 
 	eventCalendar.prototype.drawEvents = function(eventsDataList, container) {
-		if(document.getElementById('eventsList')){
+		if (document.getElementById('eventsList')) {
 			document.getElementById('eventsList').remove();
 		}
 		let listCont = document.createElement('div');
@@ -488,7 +495,7 @@ let eventCalendar = (function(calendarContainerId) {
 		that.eventsPagStartIndex = that.eventsPagIndex;
 		// that.eventsPagIndex -= (that.eventsPageSize * 2);
 
-		if(that.eventsPagIndex > 0){
+		if (that.eventsPagIndex > 0) {
 			that.eventsPagIndex -= that.eventsPageSize;
 		}
 		// console.log(that.eventsPagStartIndex);
@@ -502,7 +509,7 @@ let eventCalendar = (function(calendarContainerId) {
 		// console.log(that.eventsResult);
 
 		//Here to redraw list with next events
-		let list = this.generateList('ul', res);
+		let list = this.generateList('ul', res, 'eventsCont', true);
 		this.drawEvents(list, eventsDashboarCont);
 	};
 
@@ -514,12 +521,12 @@ let eventCalendar = (function(calendarContainerId) {
 		let res = that.eventsResult.slice();
 		that.eventsPagStartIndex = that.eventsPagIndex;
 
-		if(that.eventsPagIndex < res.length * that.eventsPageSize){
+		if (that.eventsPagIndex < res.length * that.eventsPageSize) {
 			that.eventsPagIndex += that.eventsPageSize;
 		}
 		// console.log(that.eventsPagStartIndex);
 		// console.log(that.eventsPagIndex);
-		
+
 		res = res.slice(that.eventsPagStartIndex, that.eventsPagIndex);
 		// console.log(that.eventsResult);
 		if (res.length === 0) {
@@ -528,14 +535,16 @@ let eventCalendar = (function(calendarContainerId) {
 		// console.log(that.eventsResult);
 
 		//Here to redraw list with next events
-		let list = this.generateList('ul', res);
+		let list = this.generateList('ul', res, 'eventsCont', true);
 		this.drawEvents(list, eventsDashboarCont);
 	};
 
 	eventCalendar.prototype.showEventItems = function() {
 		let eventsDashboarCont = document.getElementById('eventsDashboard');
 		eventsDashboarCont.innerHTML = '';
-		let dayNum =  !parseInt(document.getElementById('mainDateLabel').innerText) ? that.currentlySelectedDay : parseInt(document.getElementById('mainDateLabel').innerText);
+		let dayNum = !parseInt(document.getElementById('mainDateLabel').innerText)
+			? that.currentlySelectedDay
+			: parseInt(document.getElementById('mainDateLabel').innerText);
 		dayNum = dayNum < 10 ? '0' + dayNum : dayNum;
 		let month = that.currentMonthNum + 1;
 		month = month < 10 ? '0' + month : month;
@@ -559,33 +568,38 @@ let eventCalendar = (function(calendarContainerId) {
 			eventsDashboarCont.appendChild(showPrevEventsBtn);
 		}
 
-		let list = this.generateList('ul', res);
+		let list = this.generateList('ul', res, 'eventsCont', true);
 		this.drawEvents(list, eventsDashboarCont);
 		// eventsDashboarCont.appendChild(list);
 	};
 
-	eventCalendar.prototype.clearContainerById = function(id){
+	eventCalendar.prototype.clearContainerById = function(id) {
 		if (document.getElementById(id)) {
 			document.getElementById(id).innerHTML = '';
 		}
-	}
+	};
 
-	eventCalendar.prototype.closeEventWindow = function(){
-		if(document.getElementById('eventsContainer')){
+	eventCalendar.prototype.closeEventWindow = function() {
+		if (document.getElementById('eventsContainer')) {
 			// document.getElementById('eventsContainer').innerHTML = '';
 			document.getElementById('eventsContainer').style.visibility = 'hidden';
 			// document.getElementById('eventsContainer').remove();
 			that.eventWindowToggled = false;
 			this.clearContainerById('addEventCont');
 			this.clearContainerById('eventsDashboard');
+			this.checkRecentlyPastEvents();
 		}
-	}
+	};
 
 	eventCalendar.prototype.showDate = function(e, day) {
 		that.eventWindowToggled = !that.eventWindowToggled;
 		if (that.eventWindowToggled) {
-			if(!e.target.innerText && !day){
+			if (!e.target.innerText && !day) {
 				return;
+			}
+
+			if(document.getElementById('eventsSection')){
+				this.clearContainerById('eventsSection');
 			}
 
 			that.currentlySelectedDay = day;
@@ -611,7 +625,7 @@ let eventCalendar = (function(calendarContainerId) {
 			// document.getElementById('addEventCont').innerHTML = '';
 			this.clearContainerById('addEventCont');
 			document.getElementById('addEventCont').appendChild(addEventBtn);
-			if(this.checkDayForEvents(dayNum)){
+			if (this.checkDayForEvents(dayNum)) {
 				document.getElementById('addEventCont').appendChild(showEventItemsBtn);
 			}
 			// document.getElementById('closeWindowBtnCont').innerHTML = '';
@@ -625,7 +639,8 @@ let eventCalendar = (function(calendarContainerId) {
 		} else {
 			this.clearContainerById('addEventCont');
 			this.clearContainerById('eventsDashboard');
-		
+			document.getElementById('eventsContainer').style.visibility = 'hidden';
+			this.checkRecentlyPastEvents();
 			// if (document.getElementById('createEventForm')) {
 			// 	let form = document.getElementById('createEventForm');
 			// 	document.getElementById('eventsDashboard').removeChild(form);
@@ -635,22 +650,21 @@ let eventCalendar = (function(calendarContainerId) {
 			// if(document.getElementById('eventsDashboard')){
 			// 	document.getElementById('eventsDashboard').innerHTML = '';
 			// }
-			// document.getElementById('eventsContainer').style.visibility = 'hidden';
 		}
 		// console.log(e.target.innerText);
 	};
 
-	eventCalendar.prototype.checkDayForEvents = function(day){
-		if(!that.eventsData || that.eventsData.length === 0){
+	eventCalendar.prototype.checkDayForEvents = function(day) {
+		if (!that.eventsData || that.eventsData.length === 0) {
 			return;
 		}
 
-		let month = (that.currentMonthNum + 1) < 10 ? '0' + (that.currentMonthNum + 1) : that.currentMonthNum + 1;
-		let currentDay = parseInt(day) < 10 ? '0' + (parseInt(day)) : day; 
+		let month = that.currentMonthNum + 1 < 10 ? '0' + (that.currentMonthNum + 1) : that.currentMonthNum + 1;
+		let currentDay = parseInt(day) < 10 ? '0' + parseInt(day) : day;
 		let searchedDate = that.currentYear + '-' + month + '-' + currentDay;
-		let result = that.eventsData.filter(event => event.date === searchedDate);
+		let result = that.eventsData.filter((event) => event.date === searchedDate);
 		return result.length > 0;
-	}
+	};
 
 	eventCalendar.prototype.drawCalendarBody = function() {
 		// let tbodyRowsForRem = document.getElementsByTagName('tbody');
@@ -688,9 +702,9 @@ let eventCalendar = (function(calendarContainerId) {
 					tr.append(td);
 				} else {
 					//if it is NOT in indexToStartDays then write day number in cell.
-					
+
 					td.innerText = dayNum;
-					if(this.checkDayForEvents(dayNum)){
+					if (this.checkDayForEvents(dayNum)) {
 						let eventSpanSymbol = document.createElement('span');
 						eventSpanSymbol.setAttribute('class', 'eventDot');
 						// eventSpanSymbol.style.background = 'green';
@@ -704,7 +718,7 @@ let eventCalendar = (function(calendarContainerId) {
 					td.onclick = (e) => this.showDate(e, num);
 					if (dayNum == that.todayNum) {
 						td.setAttribute('class', '#1e88e5 blue light-1');
-						td.onclick = (e) => this.showDate(e,num);
+						td.onclick = (e) => this.showDate(e, num);
 					}
 
 					if ((day == 5 || day == 6) && td.innerText != '') {
@@ -768,7 +782,132 @@ let eventCalendar = (function(calendarContainerId) {
 
 		let nextYearBtn = document.getElementById('nextYear');
 		nextYearBtn.addEventListener('click', () => this.nextYear());
+	};
 
+	eventCalendar.prototype.genLastWeekDateStr = function() {
+		let today = new Date();
+		let lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+		let lastWeekDay = lastWeek.getDate();
+		let lastWeekMonth = lastWeek.getMonth() + 1;
+		let lastWeekYear = lastWeek.getFullYear();
+
+		lastWeekDay = lastWeekDay < 10 ? '0' + lastWeekDay : lastWeekDay;
+		lastWeekMonth = lastWeekMonth < 10 ? '0' + lastWeekMonth : lastWeekMonth;
+		let generatedLastWeekDate = lastWeekYear + '-' + lastWeekMonth + '-' + lastWeekDay;
+
+		return generatedLastWeekDate;
+	};
+
+	eventCalendar.prototype.genCurrentWeekDateStr = function() {
+		let today = new Date();
+		let currentWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+		let currentWeekDay = currentWeek.getDate();
+		let currentWeekMonth = currentWeek.getMonth() + 1;
+		let currentWeekYear = currentWeek.getFullYear();
+
+		currentWeekDay = currentWeekDay < 10 ? '0' + currentWeekDay : currentWeekDay;
+		currentWeekMonth = currentWeekMonth < 10 ? '0' + currentWeekMonth : currentWeekMonth;
+		let generatedCurrentWeekDate = currentWeekYear + '-' + currentWeekMonth + '-' + currentWeekDay;
+
+		return generatedCurrentWeekDate;
+	};
+
+	eventCalendar.prototype.extractEvents = function(daysToCheck) {
+		if (!that.eventsData) return [];
+
+		let result = [];
+
+		for(let day of daysToCheck){
+			for(let evDate of that.eventsData){
+				if(day === evDate.date){
+					result.push(evDate);
+				}
+			}
+			// let res = that.eventsData.filter(d => d.date === day);
+			// result.concat(res);
+		}
+
+		// console.log(result);
+		// let dateOne = startDate.split('-');
+		// console.log('dateOne: ' + dateOne);
+		// let dateTwo = finishDate.split('-');
+		// let result = that.eventsData.filter((d) => {
+		// 	let currDate = d.date.split('-');
+		// 	console.log(currDate);
+		// 	if (
+		// 		dateOne[2] <= currDate[2] &&
+		// 		currDate[2] >= dateTwo[2] &&
+		// 		(dateOne[1] <= currDate[1] && currDate[1] >= dateTwo[1])
+		// 	) {
+		// 		return d;
+		// 	}
+		// });
+
+		return result;
+	};
+
+	eventCalendar.prototype.formattedDate = function(date) {
+		var dd = date.getDate();
+		var mm = date.getMonth() + 1;
+		var yyyy = date.getFullYear();
+		if (dd < 10) {
+			dd = '0' + dd;
+		}
+		if (mm < 10) {
+			mm = '0' + mm;
+		}
+		// date = mm + '/' + dd + '/' + yyyy;
+		date = yyyy + '-' + mm + '-' + dd;
+		return date;
+	};
+
+	eventCalendar.prototype.getStrDatesFromCount = function(type, daysCount) {
+		let res = [];
+
+		switch(type){
+			case 'prev':
+				for (let i = 0; i < daysCount; i++) {
+					let d = new Date();
+					d.setDate(d.getDate() - i);
+					res.push(this.formattedDate(d));
+				}
+				break;
+			case 'next':
+				for (let i = 0; i < daysCount; i++) {
+					let d = new Date();
+					d.setDate(d.getDate() + i);
+					res.push(this.formattedDate(d));
+				}
+				break;	
+		}
+
+
+		return res;
+	};
+
+	eventCalendar.prototype.checkRecentlyPastEvents = function() {
+		const WEEKDAYS = 7;
+		// let lastWeekDate = this.genLastWeekDateStr();
+		// let currentWeekDate = this.genCurrentWeekDateStr();
+		let pastWeekDates = this.getStrDatesFromCount('prev', WEEKDAYS);
+		let nextWeekDates = this.getStrDatesFromCount('next', WEEKDAYS);
+		let extractedPastEvents = this.extractEvents(pastWeekDates);
+		let extractedNextWeekEvents = this.extractEvents(nextWeekDates);
+
+		let eventCont = document.getElementById('eventsSection');
+		let div = document.createElement('div');
+		div.setAttribute('id', 'previousEvents');
+		div.innerHTML = '<h5>Previous week events</h5>';
+		let listPastEvents= this.generateList('ul', extractedPastEvents, 'previousEventsList', false);
+		let listNextEvents= this.generateList('ul', extractedNextWeekEvents, 'nextEventsList', false);
+		div.appendChild(listPastEvents);
+		div.innerHTML += '<h5>Next week events</h5>';
+		div.appendChild(listNextEvents);
+
+		eventCont.append(div);
+		
+		// console.log(extractedPastEvents);
+		// console.log(extractedNextWeekEvents);
 	};
 
 	eventCalendar.prototype.createCalendar = function() {
@@ -785,6 +924,8 @@ let eventCalendar = (function(calendarContainerId) {
 
 		this.drawCalendarBody();
 		this.addListenersToCalendar();
+		this.checkRecentlyPastEvents();
+		// this.checkUpcomingEvents();
 		// document.getElementById('evCalendarBody').innerHTML += this.drawCalendarBody();
 		// document.getElementById('evCalendarBody').innerHTML = '';
 	};
