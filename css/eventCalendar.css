@@ -257,3 +257,7 @@ td:hover{
         font-size: 15px;
     }
 } */
+
+.itemChecked{
+    text-decoration: line-through;
+}

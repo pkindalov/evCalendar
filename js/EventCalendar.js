@@ -414,7 +414,15 @@ let eventCalendar = (function(calendarContainerId) {
 		// console.log(eventIndex);
 	};
 
-	eventCalendar.prototype.createList = function(type, data, editDelBtns) {
+	eventCalendar.prototype.checkUncheckLocalEvent = function(e, event){
+		event.checked = !event.checked;
+		let day = event.date.split('-')[2];
+		this.closeEventWindow();
+		this.showDate(e, day);
+		this.showEventItems();
+	}
+
+	eventCalendar.prototype.createList = function(type, data, addButtons) {
 		let listCont = document.createElement(type);
 		listCont.setAttribute('id', 'eventsCont');
 		li = null;
@@ -422,18 +430,31 @@ let eventCalendar = (function(calendarContainerId) {
 		for (let event of data) {
 			li = document.createElement('li');
 			li.innerText = `${event.date} - ${event.from} : ${event.to} - ${event.text}`;
-			if(editDelBtns){
+
+			if(event.checked){
+				li.setAttribute('class', 'itemChecked');
+			}
+
+			if(addButtons){
 				let editBtn = document.createElement('a');
 				let deleteBtn = document.createElement('a');
-				editBtn.setAttribute('class', 'waves-effect waves-light btn editDelBtns');
+				let checkUncheckBtn = document.createElement('a');
+				editBtn.setAttribute('class', 'waves-effect waves-light btn addButtons');
 				// editBtn.setAttribute('href', `/editEvent/${event.id}`);
 				editBtn.setAttribute('href', `#`);
 				editBtn.innerText = 'Edit';
 				editBtn.onclick = () => this.editLocalEvent(event);
-				deleteBtn.setAttribute('class', 'waves-effect red accent-4 btn editDelBtns');
+				deleteBtn.setAttribute('class', 'waves-effect red accent-4 btn addButtons');
 				// deleteBtn.setAttribute('href', `/deleteEvent/${event.id}`);
 				deleteBtn.onclick = () => this.deleteLocalEvent(event);
 				deleteBtn.innerText = 'Delete';
+				checkUncheckBtn.setAttribute('class', 'waves-effect waves-light btn addButtons');
+				// editBtn.setAttribute('href', `/editEvent/${event.id}`);
+				checkUncheckBtn.setAttribute('href', `#`);
+				checkUncheckBtn.innerText = 'Check/Uncheck';
+				checkUncheckBtn.onclick = (e) => this.checkUncheckLocalEvent(e, event);
+
+				li.appendChild(checkUncheckBtn);
 				li.appendChild(editBtn);
 				li.appendChild(deleteBtn);
 			}
@@ -443,7 +464,7 @@ let eventCalendar = (function(calendarContainerId) {
 		return listCont;
 	};
 
-	eventCalendar.prototype.generateList = function(type, data, listId, editDelBtns) {
+	eventCalendar.prototype.generateList = function(type, data, listId, addButtons) {
 		if (!data || data.length === 0) {
 			// throw new Error('Problem with data. Invalid or no content. You must pass an array with objects');
 			let list = type == 'ul' ? document.createElement('ul') : document.createElement('ol');
@@ -458,11 +479,11 @@ let eventCalendar = (function(calendarContainerId) {
 
 		switch (type) {
 			case 'ul':
-				listCont = this.createList('ul', data, editDelBtns);
+				listCont = this.createList('ul', data, addButtons);
 				return listCont;
 				break;
 			case 'ol':
-				listCont = this.createList('ol', data), editDelBtns;
+				listCont = this.createList('ol', data), addButtons;
 				break;
 			default:
 				listCont = this.createList('ul', data);
@@ -603,7 +624,7 @@ let eventCalendar = (function(calendarContainerId) {
 			}
 
 			that.currentlySelectedDay = day;
-			let dayNum = parseInt(day) < 10 ? '0' + day : day;
+			let dayNum = parseInt(day) < 10 ? '0' + (parseInt(day)) : day;
 			let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
 			let addEventBtn = document.createElement('a');
 			addEventBtn.setAttribute('class', 'waves-effect waves-light btn');
@@ -631,7 +652,7 @@ let eventCalendar = (function(calendarContainerId) {
 			// document.getElementById('closeWindowBtnCont').innerHTML = '';
 			this.clearContainerById('closeWindowBtnCont');
 			document.getElementById('closeWindowBtnCont').appendChild(closeWindowBtn);
-			document.getElementById('mainDateLabel').innerText = !e.target.innerText ? day : e.target.innerText;
+			document.getElementById('mainDateLabel').innerText = day;
 			document.getElementById('dayName').innerText = nameOfDay;
 			document.getElementById('yearField').innerText = document.getElementById('yearLabel').innerText;
 			document.getElementById('nameOfMonth').innerText = document.getElementById('monthLabel').innerText;
