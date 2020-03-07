@@ -414,11 +414,11 @@ let eventCalendar = (function(calendarContainerId) {
 		// console.log(eventIndex);
 	};
 
-	eventCalendar.prototype.checkUncheckLocalEvent = function(e, event){
+	eventCalendar.prototype.checkUncheckLocalEvent = function(event){
 		event.checked = !event.checked;
 		let day = event.date.split('-')[2];
 		this.closeEventWindow();
-		this.showDate(e, day);
+		this.showDate(day);
 		this.showEventItems();
 	}
 
@@ -452,7 +452,7 @@ let eventCalendar = (function(calendarContainerId) {
 				// editBtn.setAttribute('href', `/editEvent/${event.id}`);
 				checkUncheckBtn.setAttribute('href', `#`);
 				checkUncheckBtn.innerText = 'Check/Uncheck';
-				checkUncheckBtn.onclick = (e) => this.checkUncheckLocalEvent(e, event);
+				checkUncheckBtn.onclick = () => this.checkUncheckLocalEvent(event);
 
 				li.appendChild(checkUncheckBtn);
 				li.appendChild(editBtn);
@@ -603,7 +603,9 @@ let eventCalendar = (function(calendarContainerId) {
 	eventCalendar.prototype.closeEventWindow = function() {
 		if (document.getElementById('eventsContainer')) {
 			// document.getElementById('eventsContainer').innerHTML = '';
-			document.getElementById('eventsContainer').style.visibility = 'hidden';
+			document.getElementById('eventsContainer').classList.remove("visible");
+			document.getElementById('eventsContainer').setAttribute('class', 'nonVisible');
+			// document.getElementById('eventsContainer').style.visibility = 'hidden';
 			// document.getElementById('eventsContainer').remove();
 			that.eventWindowToggled = false;
 			this.clearContainerById('addEventCont');
@@ -612,10 +614,10 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 	};
 
-	eventCalendar.prototype.showDate = function(e, day) {
+	eventCalendar.prototype.showDate = function(day) {
 		that.eventWindowToggled = !that.eventWindowToggled;
 		if (that.eventWindowToggled) {
-			if (!e.target.innerText && !day) {
+			if (!day) {
 				return;
 			}
 
@@ -652,15 +654,21 @@ let eventCalendar = (function(calendarContainerId) {
 			// document.getElementById('closeWindowBtnCont').innerHTML = '';
 			this.clearContainerById('closeWindowBtnCont');
 			document.getElementById('closeWindowBtnCont').appendChild(closeWindowBtn);
-			document.getElementById('mainDateLabel').innerText = day;
+			document.getElementById('mainDateLabel').innerText = parseInt(day);
 			document.getElementById('dayName').innerText = nameOfDay;
 			document.getElementById('yearField').innerText = document.getElementById('yearLabel').innerText;
 			document.getElementById('nameOfMonth').innerText = document.getElementById('monthLabel').innerText;
-			document.getElementById('eventsContainer').style.visibility = 'visible';
+			document.getElementById('eventsContainer').classList.remove("nonVisible");
+			document.getElementById('eventsContainer').setAttribute('class', 'visible');
+
+			// document.getElementById('eventsContainer').style.visibility = 'visible';
 		} else {
 			this.clearContainerById('addEventCont');
 			this.clearContainerById('eventsDashboard');
-			document.getElementById('eventsContainer').style.visibility = 'hidden';
+			document.getElementById('eventsContainer').classList.remove("visible");
+			document.getElementById('eventsContainer').setAttribute('class', 'nonVisible');
+
+			// document.getElementById('eventsContainer').style.visibility = 'hidden';
 			this.checkRecentlyPastEvents();
 			// if (document.getElementById('createEventForm')) {
 			// 	let form = document.getElementById('createEventForm');
@@ -718,7 +726,7 @@ let eventCalendar = (function(calendarContainerId) {
 						let num = dayNum;
 						td.setAttribute('class', '#1e88e5 blue light-1');
 						td.setAttribute('id', `day${dayNum}`);
-						td.onclick = (e) => this.showDate(e, num);
+						td.onclick = () => this.showDate(num);
 					}
 					tr.append(td);
 				} else {
@@ -736,16 +744,16 @@ let eventCalendar = (function(calendarContainerId) {
 					}
 					let num = dayNum;
 					td.setAttribute('id', `day${dayNum}`);
-					td.onclick = (e) => this.showDate(e, num);
+					td.onclick = () => this.showDate(num);
 					if (dayNum == that.todayNum) {
 						td.setAttribute('class', '#1e88e5 blue light-1');
-						td.onclick = (e) => this.showDate(e, num);
+						td.onclick = () => this.showDate(num);
 					}
 
 					if ((day == 5 || day == 6) && td.innerText != '') {
 						td.setAttribute('class', '#1e88e5 blue light-1');
 						td.setAttribute('id', `day${dayNum}`);
-						td.onclick = (e) => this.showDate(e, num);
+						td.onclick = () => this.showDate(num);
 					}
 					tr.append(td);
 					dayNum++;

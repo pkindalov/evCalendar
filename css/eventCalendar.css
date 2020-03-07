@@ -43,7 +43,7 @@ td:hover{
     height: 82%;
     width: 40%;
     margin-left: 29.5%;
-    visibility: hidden;
+    /* visibility: hidden; */
 }
 
 #eventsList{
@@ -260,4 +260,12 @@ td:hover{
 
 .itemChecked{
     text-decoration: line-through;
+}
+
+.visible{
+    visibility: visible;
+}
+
+.nonVisible{
+    visibility: hidden;
 }
