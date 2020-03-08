@@ -4,9 +4,9 @@ body{
     font-family: 'Concert One', cursive;
 }
 
- /* tr, td{
-    border:  1px solid black;
-} */
+ tr, td{
+    border: none;
+}
 
 table{
     border-spacing: 0;
@@ -24,10 +24,66 @@ td:hover{
     margin-bottom: 20px;
     border-radius: 5px;
     border:  5px solid #1e88e5;
+    /* background: url('../images/blueFractal1.png') rgba(255,255,255,0.3); */
+   
 }
-/* .row{
-    border: 1px solid red;
-} */
+
+.darkTheme1, .darkTheme2, .darkTheme3, .darkTheme4, .darkTheme5, .darkTheme6,
+.colorfulTheme1, .colorfulTheme2, .colorfulTheme3, .colorfulTheme4, 
+.colorfulTheme5, .colorfulTheme6{
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.darkTheme1{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/blueFractal1.png");
+}
+
+.darkTheme2{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/winterBackground2.png");
+}
+
+.darkTheme3{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/winterBackground3.png");
+}
+
+.darkTheme4{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/winterBackground4.png");
+}
+
+
+.darkTheme5{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/darkTheme5.png");
+}
+
+.darkTheme6{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/darkTheme6.png");
+}
+
+.colorfulTheme1{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/colorfulTheme1.png");
+}
+
+.colorfulTheme2{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/colorfulTheme2.png");
+}
+
+.colorfulTheme3{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/colorfulTheme3.png");
+}
+
+.colorfulTheme4{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/colorfulTheme4.png");
+}
+
+.colorfulTheme5{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/colorfulTheme5.png");
+}
+
+.colorfulTheme6{
+    background-image: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.2)), url("../images/colorfulTheme6.png");
+}
 
 #dayName{
     /* border: 1px solid red;
@@ -48,7 +104,7 @@ td:hover{
 
 #eventsList{
     overflow: scroll;
-    height: 350px;
+    height: 300px;
     font-size: 15px;
 }
 
