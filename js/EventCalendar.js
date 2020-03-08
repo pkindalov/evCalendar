@@ -20,30 +20,25 @@ let eventCalendar = (function(calendarContainerId) {
 	that.eventsPageSize = 5;
 	that.eventsResult = null;
 	that.useThemes = true,
-	that.darkThemes = [
-		'darkTheme1', 
-		'darkTheme2', 
-		'darkTheme3',
-		'darkTheme4', 
-		'darkTheme5',
-		'darkTheme6'
-	];
-	that.colorfulThemes = [
-		'colorfulTheme1',
-		'colorfulTheme2', 
-		'colorfulTheme3', 
-		'colorfulTheme4', 
-		'colorfulTheme5',
+	that.darkThemes = [ 'darkTheme1', 'darkTheme2', 'darkTheme3', 'darkTheme4', 'darkTheme5', 'darkTheme6' ];
+	that.colorfulThemes = ['colorfulTheme1','colorfulTheme2','colorfulTheme3','colorfulTheme4','colorfulTheme5',
 		'colorfulTheme6'
 	];
 	that.mainTheme = that.darkThemes[0];
+	that.language = 'en';
+	that.monthsBg = [
+		'Януари','Февруари','Март','Април','Май','Юни','Юли','Август','Септември','Октомври','Ноември','Декември'];
+	that.monthsEn = ['January','February','March','April','May','June','July','August','September','October',
+					'November','December'];
+	that.nameOfDaysEn = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];	
+	that.nameOfDaysBg = ['Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота', 'Неделя'];			
 
 	function eventCalendar(config) {
-		if(config && config.constructor === Object){
+		if (config && config.constructor === Object) {
 			let keys = Object.keys(config);
 
-			for(let key of keys){
-				switch(key){
+			for (let key of keys) {
+				switch (key) {
 					case 'calendarContainer':
 						this.setContainer(config[key]);
 						break;
@@ -52,10 +47,12 @@ let eventCalendar = (function(calendarContainerId) {
 						break;
 					case 'calendarEventsData':
 						this.setData(config[key]);
-						break;		
+						break;
+					case 'language':
+						this.setLanguage(config[key]);
+						break;
 				}
 			}
-
 		}
 		// console.log(config.constructor === Object);
 		// console.log(typeof config === 'object' && config !== null);
@@ -96,21 +93,14 @@ let eventCalendar = (function(calendarContainerId) {
 	};
 
 	eventCalendar.prototype.setCurrentMonthName = function(monthNum) {
-		let months = [
-			'January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December'
-		];
-		return months[monthNum];
+		switch (that.language) {
+			case 'en':
+				return that.monthsEn[monthNum];
+			case 'bg':
+				return that.monthsBg[monthNum];
+			default:
+				return that.monthsEn[monthNum];
+		}
 	};
 
 	eventCalendar.prototype.setCurrentYear = function(date) {
@@ -164,19 +154,27 @@ let eventCalendar = (function(calendarContainerId) {
 		return that.todayNum;
 	};
 
-	eventCalendar.prototype.setThemeAllContainers = function(){
+	eventCalendar.prototype.setThemeAllContainers = function() {
 		document.getElementsByClassName('container')[0].classList.remove();
 		document.getElementsByClassName('container')[0].setAttribute('class', `container ${that.mainTheme}`);
-	}
+	};
 
-	eventCalendar.prototype.setUseOfThemes = function(useTheme){
-		if(typeof useTheme !== 'boolean'){
+	eventCalendar.prototype.setUseOfThemes = function(useTheme) {
+		if (typeof useTheme !== 'boolean') {
 			// throw new Error('Variable of setUseOfTheme method must be of type boolean');
 			console.log('Variable of setUseOfTheme method must be of type boolean');
 			return;
 		}
 		that.useThemes = useTheme;
-	}
+	};
+
+	eventCalendar.prototype.setLanguage = function(language) {
+		if (!language) {
+			return;
+		}
+
+		that.language = language;
+	};
 
 	eventCalendar.prototype.prevMonth = function() {
 		that.currentMonthNum <= 0 ? (that.currentMonthNum = 11) : --that.currentMonthNum;
@@ -218,32 +216,36 @@ let eventCalendar = (function(calendarContainerId) {
 		this.drawCalendarBody();
 	};
 
+	eventCalendar.prototype.checkNameOfDayDiffLang = function(dayIndex){
+		switch(that.language){
+			case 'en':
+				return that.nameOfDaysEn[dayIndex];
+			case 'bg':
+				return that.nameOfDaysBg[dayIndex];
+			default:
+				throw new Error('Invalid name of day');
+				break;		
+		}
+	}
+
 	eventCalendar.prototype.getNameOfDay = function(dayNum, monthNum, yearNum) {
-		let days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];
 		let dateStr = yearNum + '-' + (monthNum + 1) + '-' + dayNum;
 		let dateNameAbbr = new Date(dateStr).toString().split(' ')[0];
 		switch (dateNameAbbr) {
 			case 'Mon':
-				return days[0];
-				break;
+				return this.checkNameOfDayDiffLang(0);
 			case 'Tue':
-				return days[1];
-				break;
+				return this.checkNameOfDayDiffLang(1);
 			case 'Wed':
-				return days[2];
-				break;
+				return this.checkNameOfDayDiffLang(2);
 			case 'Thu':
-				return days[3];
-				break;
+				return this.checkNameOfDayDiffLang(3);
 			case 'Fri':
-				return days[4];
-				break;
+				return this.checkNameOfDayDiffLang(4);
 			case 'Sat':
-				return days[5];
-				break;
+				return this.checkNameOfDayDiffLang(5);
 			case 'Sun':
-				return days[6];
-				break;
+				return this.checkNameOfDayDiffLang(6);
 		}
 	};
 
@@ -255,8 +257,42 @@ let eventCalendar = (function(calendarContainerId) {
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
 		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
 		that.todayNum = this.setTodayNum(new Date());
+		let tableStr = '';
 
-		return `<table class="centered" id="evCalendar">
+		switch (that.language) {
+			case 'en':
+				tableStr = `<table class="centered" id="evCalendar">
+				<thead>
+				<tr>
+					<th colspan="7" class="center-align">
+					 <a href="#" id="prevMont">&lt;</a>
+					 <span id="monthLabel">${that.currentMontName}</span>
+					 <a href="#" id="nextMont">&gt;</a>
+					</th>
+				</tr>
+				<tr>
+				<th colspan="7" class="center-align">
+				 <a href="#" id="prevYear">&lt;</a>
+				 <span id="yearLabel">${that.currentYear}</span>
+				 <a href="#" id="nextYear">&gt;</a>
+				</th>
+			</tr>
+				<tr>
+					<th>Mon</th>
+					<th>Tue</th>
+					<th>Wed</th>
+					<th>Thu</th>
+					<th>Fri</th>
+					<th>Sat</th>
+					<th>Sun</th>
+				</tr>
+				</thead>
+				<tbody id="evCalendarBody">
+				</tbody>
+			</table>`;
+				break;
+			case 'bg':
+				tableStr = `<table class="centered" id="evCalendar">
 					<thead>
                     <tr>
                         <th colspan="7" class="center-align">
@@ -273,18 +309,53 @@ let eventCalendar = (function(calendarContainerId) {
 					</th>
 				</tr>
                     <tr>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
-                        <th>Sun</th>
+                        <th>Пон</th>
+                        <th>Вто</th>
+                        <th>Сря</th>
+                        <th>Чет</th>
+                        <th>Пет</th>
+                        <th>Съб</th>
+                        <th>Нед</th>
 					</tr>
 					</thead>
                     <tbody id="evCalendarBody">
                     </tbody>
                 </table>`;
+				break;
+			default:
+				tableStr = `<table class="centered" id="evCalendar">
+				<thead>
+				<tr>
+					<th colspan="7" class="center-align">
+					 <a href="#" id="prevMont">&lt;</a>
+					 <span id="monthLabel">${that.currentMontName}</span>
+					 <a href="#" id="nextMont">&gt;</a>
+					</th>
+				</tr>
+				<tr>
+				<th colspan="7" class="center-align">
+				 <a href="#" id="prevYear">&lt;</a>
+				 <span id="yearLabel">${that.currentYear}</span>
+				 <a href="#" id="nextYear">&gt;</a>
+				</th>
+			</tr>
+				<tr>
+					<th>Mon</th>
+					<th>Tue</th>
+					<th>Wed</th>
+					<th>Thu</th>
+					<th>Fri</th>
+					<th>Sat</th>
+					<th>Sun</th>
+				</tr>
+				</thead>
+				<tbody id="evCalendarBody">
+				</tbody>
+			</table>`;
+				break;
+		}
+
+		return tableStr;
 	};
 
 	eventCalendar.prototype.getMonthRows = function(cellsCount) {
@@ -471,13 +542,13 @@ let eventCalendar = (function(calendarContainerId) {
 		// console.log(eventIndex);
 	};
 
-	eventCalendar.prototype.checkUncheckLocalEvent = function(event){
+	eventCalendar.prototype.checkUncheckLocalEvent = function(event) {
 		event.checked = !event.checked;
 		let day = event.date.split('-')[2];
 		this.closeEventWindow();
 		this.showDate(day);
 		this.showEventItems();
-	}
+	};
 
 	eventCalendar.prototype.createList = function(type, data, addButtons) {
 		let listCont = document.createElement(type);
@@ -488,11 +559,11 @@ let eventCalendar = (function(calendarContainerId) {
 			li = document.createElement('li');
 			li.innerText = `${event.date} - ${event.from} : ${event.to} - ${event.text}`;
 
-			if(event.checked){
+			if (event.checked) {
 				li.setAttribute('class', 'itemChecked');
 			}
 
-			if(addButtons){
+			if (addButtons) {
 				let editBtn = document.createElement('a');
 				let deleteBtn = document.createElement('a');
 				let checkUncheckBtn = document.createElement('a');
@@ -540,7 +611,7 @@ let eventCalendar = (function(calendarContainerId) {
 				return listCont;
 				break;
 			case 'ol':
-				listCont = this.createList('ol', data), addButtons;
+				(listCont = this.createList('ol', data)), addButtons;
 				break;
 			default:
 				listCont = this.createList('ul', data);
@@ -660,7 +731,7 @@ let eventCalendar = (function(calendarContainerId) {
 	eventCalendar.prototype.closeEventWindow = function() {
 		if (document.getElementById('eventsContainer')) {
 			// document.getElementById('eventsContainer').innerHTML = '';
-			document.getElementById('eventsContainer').classList.remove("visible");
+			document.getElementById('eventsContainer').classList.remove('visible');
 			document.getElementById('eventsContainer').setAttribute('class', 'nonVisible');
 			// document.getElementById('eventsContainer').style.visibility = 'hidden';
 			// document.getElementById('eventsContainer').remove();
@@ -678,12 +749,12 @@ let eventCalendar = (function(calendarContainerId) {
 				return;
 			}
 
-			if(document.getElementById('eventsSection')){
+			if (document.getElementById('eventsSection')) {
 				this.clearContainerById('eventsSection');
 			}
 
 			that.currentlySelectedDay = day;
-			let dayNum = parseInt(day) < 10 ? '0' + (parseInt(day)) : day;
+			let dayNum = parseInt(day) < 10 ? '0' + parseInt(day) : day;
 			let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
 			let addEventBtn = document.createElement('a');
 			addEventBtn.setAttribute('class', 'waves-effect waves-light btn');
@@ -715,14 +786,14 @@ let eventCalendar = (function(calendarContainerId) {
 			document.getElementById('dayName').innerText = nameOfDay;
 			document.getElementById('yearField').innerText = document.getElementById('yearLabel').innerText;
 			document.getElementById('nameOfMonth').innerText = document.getElementById('monthLabel').innerText;
-			document.getElementById('eventsContainer').classList.remove("nonVisible");
+			document.getElementById('eventsContainer').classList.remove('nonVisible');
 			document.getElementById('eventsContainer').setAttribute('class', `visible ${that.mainTheme}`);
 
 			// document.getElementById('eventsContainer').style.visibility = 'visible';
 		} else {
 			this.clearContainerById('addEventCont');
 			this.clearContainerById('eventsDashboard');
-			document.getElementById('eventsContainer').classList.remove("visible");
+			document.getElementById('eventsContainer').classList.remove('visible');
 			document.getElementById('eventsContainer').setAttribute('class', 'nonVisible');
 
 			// document.getElementById('eventsContainer').style.visibility = 'hidden';
@@ -903,9 +974,9 @@ let eventCalendar = (function(calendarContainerId) {
 
 		let result = [];
 
-		for(let day of daysToCheck){
-			for(let evDate of that.eventsData){
-				if(day === evDate.date){
+		for (let day of daysToCheck) {
+			for (let evDate of that.eventsData) {
+				if (day === evDate.date) {
 					result.push(evDate);
 				}
 			}
@@ -950,7 +1021,7 @@ let eventCalendar = (function(calendarContainerId) {
 	eventCalendar.prototype.getStrDatesFromCount = function(type, daysCount) {
 		let res = [];
 
-		switch(type){
+		switch (type) {
 			case 'prev':
 				for (let i = 0; i < daysCount; i++) {
 					let d = new Date();
@@ -964,9 +1035,8 @@ let eventCalendar = (function(calendarContainerId) {
 					d.setDate(d.getDate() + i);
 					res.push(this.formattedDate(d));
 				}
-				break;	
+				break;
 		}
-
 
 		return res;
 	};
@@ -984,37 +1054,37 @@ let eventCalendar = (function(calendarContainerId) {
 		let div = document.createElement('div');
 		div.setAttribute('id', 'previousEvents');
 		div.innerHTML = '<h5>Previous week events</h5>';
-		let listPastEvents= this.generateList('ul', extractedPastEvents, 'previousEventsList', false);
-		let listNextEvents= this.generateList('ul', extractedNextWeekEvents, 'nextEventsList', false);
+		let listPastEvents = this.generateList('ul', extractedPastEvents, 'previousEventsList', false);
+		let listNextEvents = this.generateList('ul', extractedNextWeekEvents, 'nextEventsList', false);
 		div.appendChild(listPastEvents);
 		div.innerHTML += '<h5>Next week events</h5>';
 		div.appendChild(listNextEvents);
 
 		eventCont.append(div);
-		
+
 		// console.log(extractedPastEvents);
 		// console.log(extractedNextWeekEvents);
 	};
 
-	eventCalendar.prototype.addThemeForMonth = function(currentMonth){
-		switch(currentMonth){
+	eventCalendar.prototype.addThemeForMonth = function(currentMonth) {
+		switch (currentMonth) {
 			case 0:
 				return that.darkThemes[0];
 			case 1:
-					return that.darkThemes[1];
+				return that.darkThemes[1];
 			case 2:
 				return that.darkThemes[2];
-			case 3:	
+			case 3:
 				return that.colorfulThemes[0];
-			case 4:	
+			case 4:
 				return that.colorfulThemes[1];
-			case 5:	
+			case 5:
 				return that.colorfulThemes[2];
-			case 6:	
+			case 6:
 				return that.colorfulThemes[3];
-			case 7:	
+			case 7:
 				return that.colorfulThemes[4];
-			case 8:	
+			case 8:
 				return that.darkThemes[3];
 			case 9:
 				return that.darkThemes[4];
@@ -1027,9 +1097,7 @@ let eventCalendar = (function(calendarContainerId) {
 		}
 		// let mainCont = document.getElementsByClassName('container')[0];
 		// let eventsCont = document.getElementById('eventsContainer');
-
-
-	}
+	};
 
 	eventCalendar.prototype.createCalendar = function() {
 		if (!that.container) {
