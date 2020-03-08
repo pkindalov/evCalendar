@@ -38,7 +38,28 @@ let eventCalendar = (function(calendarContainerId) {
 	];
 	that.mainTheme = that.darkThemes[0];
 
-	function eventCalendar() {}
+	function eventCalendar(config) {
+		if(config && config.constructor === Object){
+			let keys = Object.keys(config);
+
+			for(let key of keys){
+				switch(key){
+					case 'calendarContainer':
+						this.setContainer(config[key]);
+						break;
+					case 'usingThemes':
+						this.setUseOfThemes(config[key]);
+						break;
+					case 'calendarEventsData':
+						this.setData(config[key]);
+						break;		
+				}
+			}
+
+		}
+		// console.log(config.constructor === Object);
+		// console.log(typeof config === 'object' && config !== null);
+	}
 
 	eventCalendar.prototype.setContainer = function(calendarContainerId) {
 		if (!document.getElementById(calendarContainerId)) {
@@ -149,6 +170,11 @@ let eventCalendar = (function(calendarContainerId) {
 	}
 
 	eventCalendar.prototype.setUseOfThemes = function(useTheme){
+		if(typeof useTheme !== 'boolean'){
+			// throw new Error('Variable of setUseOfTheme method must be of type boolean');
+			console.log('Variable of setUseOfTheme method must be of type boolean');
+			return;
+		}
 		that.useThemes = useTheme;
 	}
 

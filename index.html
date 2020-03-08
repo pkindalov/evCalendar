@@ -55,8 +55,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="js/EventCalendar.js"></script>
     <script>
-        let evCalendar = new eventCalendar();
-        evCalendar.setContainer('simpleCalendarContainer');
         let dataEvents = [
             {id: 1, date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Mother\'s birthday', checked: false},
             {id: 2, date: '2020-02-16', from: '00:00:00', to: '18:00:00', text: 'Father\'s birthday', checked: false},
@@ -73,8 +71,14 @@
             {id: 13, date: '2020-03-03', from: '00:00:00', to: '18:00:00', text: 'Национален празник по случай освобождението на България', checked: false},
             {id: 14, date: '2020-03-11', from: '00:00:00', to: '18:00:00', text: 'next week test', checked: true },
         ];
-        // evCalendar.setUseOfThemes(true);
-        evCalendar.setData(dataEvents);
+        let evCalendar = new eventCalendar({
+            calendarContainer: 'simpleCalendarContainer',
+            usingThemes: false,
+            calendarEventsData: dataEvents
+        });
+        // evCalendar.setContainer('simpleCalendarContainer');
+        // evCalendar.setUseOfThemes(false);
+        // evCalendar.setData(dataEvents);
         evCalendar.createCalendar();
         
 
