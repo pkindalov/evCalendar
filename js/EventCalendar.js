@@ -19,19 +19,92 @@ let eventCalendar = (function(calendarContainerId) {
 	that.eventsPagIndex = 5;
 	that.eventsPageSize = 5;
 	that.eventsResult = null;
-	that.useThemes = true,
-	that.darkThemes = [ 'darkTheme1', 'darkTheme2', 'darkTheme3', 'darkTheme4', 'darkTheme5', 'darkTheme6' ];
-	that.colorfulThemes = ['colorfulTheme1','colorfulTheme2','colorfulTheme3','colorfulTheme4','colorfulTheme5',
+	(that.useThemes = true),
+		(that.darkThemes = [ 'darkTheme1', 'darkTheme2', 'darkTheme3', 'darkTheme4', 'darkTheme5', 'darkTheme6' ]);
+	that.colorfulThemes = [
+		'colorfulTheme1',
+		'colorfulTheme2',
+		'colorfulTheme3',
+		'colorfulTheme4',
+		'colorfulTheme5',
 		'colorfulTheme6'
 	];
 	that.mainTheme = that.darkThemes[0];
 	that.language = 'en';
 	that.monthsBg = [
-		'Януари','Февруари','Март','Април','Май','Юни','Юли','Август','Септември','Октомври','Ноември','Декември'];
-	that.monthsEn = ['January','February','March','April','May','June','July','August','September','October',
-					'November','December'];
-	that.nameOfDaysEn = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];	
-	that.nameOfDaysBg = ['Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота', 'Неделя'];			
+		'Януари',
+		'Февруари',
+		'Март',
+		'Април',
+		'Май',
+		'Юни',
+		'Юли',
+		'Август',
+		'Септември',
+		'Октомври',
+		'Ноември',
+		'Декември'
+	];
+	that.monthsEn = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	];
+	that.nameOfDaysEn = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];
+	that.nameOfDaysBg = [ 'Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота', 'Неделя' ];
+	that.eventsLabelsEn = [
+		'Previous week events',
+		'Next week events',
+		'No events',
+		'Begin',
+		'Finish',
+		'Text',
+		'Date'
+	];
+	that.eventsLabelsBg = [
+		'Събития миналата седмица',
+		'Събития следващата седмица',
+		'Няма събития',
+		'Започване',
+		'Приключване',
+		'Текст',
+		'Дата'
+	];
+	that.buttonLabelsEn = [
+		'Add event',
+		'Edit',
+		'Delete',
+		'Check/Uncheck',
+		'Show Events',
+		'Show More',
+		'Show Previous',
+		'Edit event',
+		'Clear'
+	];
+	that.buttonLabelsBg = [
+		'Добави събитие',
+		'Редактирай',
+		'Изтрий',
+		'Маркирай/Отмаркирай',
+		'Покажи събития',
+		'Покажи още',
+		'Предишни',
+		'Редактирай събитие',
+		'Изчисти'
+	];
+
+	//arrays used by getTranslatedWord method. If there is other languages arrays must be put here.
+	that.allBgLabels = [ that.eventsLabelsBg, that.buttonLabelsBg, that.nameOfDaysBg ];
+	that.allEnLabels = [ that.eventsLabelsEn, that.buttonLabelsEn, that.nameOfDaysEn ];
 
 	function eventCalendar(config) {
 		if (config && config.constructor === Object) {
@@ -216,17 +289,17 @@ let eventCalendar = (function(calendarContainerId) {
 		this.drawCalendarBody();
 	};
 
-	eventCalendar.prototype.checkNameOfDayDiffLang = function(dayIndex){
-		switch(that.language){
+	eventCalendar.prototype.checkNameOfDayDiffLang = function(dayIndex) {
+		switch (that.language) {
 			case 'en':
 				return that.nameOfDaysEn[dayIndex];
 			case 'bg':
 				return that.nameOfDaysBg[dayIndex];
 			default:
 				throw new Error('Invalid name of day');
-				break;		
+				break;
 		}
-	}
+	};
 
 	eventCalendar.prototype.getNameOfDay = function(dayNum, monthNum, yearNum) {
 		let dateStr = yearNum + '-' + (monthNum + 1) + '-' + dayNum;
@@ -467,23 +540,101 @@ let eventCalendar = (function(calendarContainerId) {
 		this.drawCalendarBody();
 	};
 
+	eventCalendar.prototype.getTranslatedWord = function(word, from, to) {
+		let indexOfSearchWordInCurrLang = -1;
+		let indexEnArr = 0;
+		let indexBgArr = 0;
+
+		switch (from) {
+			case 'en':
+				for (let arr of allEnLabels) {
+					indexOfSearchWordInCurrLang = arr.indexOf(word);
+					if (indexOfSearchWordInCurrLang != -1) {
+						break;
+					}
+					indexEnArr++;
+				}
+
+				if (indexOfSearchWordInCurrLang < 0) {
+					return word;
+				}
+
+				switch (to) {
+					case 'en':
+						return word;
+					case 'bg':
+						return that.allBgLabels[indexEnArr][indexOfSearchWordInCurrLang];
+				}
+
+				break;
+			case 'bg':
+				for (let arr of allBgLabels) {
+					indexOfSearchWordInCurrLang = arr.indexOf(word);
+					if (indexOfSearchWordInCurrLang != -1) {
+						break;
+					}
+					indexBgArr++;
+				}
+
+				if (indexOfSearchWordInCurrLang < 0) {
+					return word;
+				}
+
+				switch (to) {
+					case 'bg':
+						return word;
+					case 'en':
+						return that.allEnLabels[indexBgArr][indexOfSearchWordInCurrLang];
+				}
+
+				break;
+		}
+	};
+
 	eventCalendar.prototype.addEventForm = function() {
+		// console.log(this.getTranslatedWord('Редактирай', 'en', 'bg'));
 		// alert(document.getElementById('mainDateLabel').innerText);
+		let createEvenBtnTxt, clearBtnTx, beginLabelTx, finishLabelTx, textLabelTx;
+
+		switch (that.language) {
+			case 'en':
+				createEvenBtnTxt = that.buttonLabelsEn[0];
+				clearBtnTx = that.buttonLabelsEn[8];
+				beginLabelTx = that.eventsLabelsEn[3];
+				finishLabelTx = that.eventsLabelsEn[4];
+				textLabelTx = that.eventsLabelsEn[5];
+				break;
+			case 'bg':
+				createEvenBtnTxt = this.getTranslatedWord(that.buttonLabelsEn[0], 'en', 'bg');
+				clearBtnTx = this.getTranslatedWord(that.buttonLabelsEn[8], 'en', 'bg');
+				beginLabelTx = this.getTranslatedWord(that.eventsLabelsEn[3], 'en', 'bg');
+				finishLabelTx = this.getTranslatedWord(that.eventsLabelsEn[4], 'en', 'bg');
+				textLabelTx = this.getTranslatedWord(that.eventsLabelsEn[5], 'en', 'bg');
+				break;
+			default:
+				createEvenBtnTxt = 'Add event';
+				clearBtnTx = 'Clear';
+				beginLabelTx = 'Begin';
+				finishLabelTx = 'Finsish';
+				textLabelTx = 'Text';
+				break;
+		}
+
 		let eventsDashboard = document.getElementById('eventsDashboard');
 		eventsDashboard.innerHTML = '<div id="addEventCont"></div>';
 		let form = `
 			<form id="createEventForm" action="#" method="post">
-				<label for="hoursBegin">Begin</label>
+				<label for="hoursBegin">${beginLabelTx}</label>
 				  <input type="text" name="hoursBegin" class="timepicker" />
-				  <label for="hoursFinish">Finish</label>
+				  <label for="hoursFinish">${finishLabelTx}</label>
 				  <input type="text" name="hoursFinish" class="timepicker" />  
-				  <label for="eventText">Text</label>
+				  <label for="eventText">${textLabelTx}</label>
 				  <textarea id="eventText" name="eventTextName" class="materialize-textarea"></textarea>
-				  <a id="createLocalEvent" href="#" class="waves-effect waves-light btn">CREATE STATIC EVENT</a>
-				  <input type="submit" class="waves-effect waves-light btn" value="Create Event" />
-				  <input type="reset" class="waves-effect waves-light btn" value="Clear" />
-			</form>
-		`;
+				  <a id="createLocalEvent" href="#" class="waves-effect waves-light btn">${createEvenBtnTxt}</a>
+				  <input type="reset" class="waves-effect waves-light btn" value="${clearBtnTx}" />
+				  </form>
+				  `;
+		//   <input type="submit" class="waves-effect waves-light btn" value="Create Event" />
 
 		eventsDashboard.innerHTML += form;
 
@@ -497,21 +648,55 @@ let eventCalendar = (function(calendarContainerId) {
 	eventCalendar.prototype.editLocalEvent = function(event) {
 		let eventsDashboard = document.getElementById('eventsDashboard');
 		eventsDashboard.innerHTML = '<div id="addEventCont"></div>';
+		let editStaticEvenBtnTx = '';
+		let clearBtnTx = '';
+		let dateLabelTx = '';
+		let beginLabelTx = '';
+		let finishLabelTx = '';
+		let textLabelTx = '';
+
+		switch (that.language) {
+			case 'en':
+				editStaticEvenBtnTx = that.buttonLabelsEn[1];
+				clearBtnTx = that.buttonLabelsEn[8];
+				dateLabelTx = that.eventsLabelsEn[6];
+				beginLabelTx = that.eventsLabelsEn[3];
+				finishLabelTx = that.eventsLabelsEn[4];
+				textLabelTx = that.eventsLabelsEn[5];
+				break;
+			case 'bg':
+				editStaticEvenBtnTx = this.getTranslatedWord(that.buttonLabelsEn[1], 'en', 'bg');
+				clearBtnTx = this.getTranslatedWord(that.buttonLabelsEn[8], 'en', 'bg');
+				dateLabelTx = this.getTranslatedWord(that.eventsLabelsEn[6], 'en', 'bg');
+				beginLabelTx = this.getTranslatedWord(that.eventsLabelsEn[3], 'en', 'bg');
+				finishLabelTx = this.getTranslatedWord(that.eventsLabelsEn[4], 'en', 'bg');
+				textLabelTx = this.getTranslatedWord(that.eventsLabelsEn[5], 'en', 'bg');
+				break;
+			default:
+				editStaticEvenBtnTx = that.buttonLabelsEn[1];
+				clearBtnTx = that.buttonLabelsEn[8];
+				dateLabelTx = that.eventsLabelsEn[6];
+				beginLabelTx = that.eventsLabelsEn[3];
+				finishLabelTx = that.eventsLabelsEn[4];
+				textLabelTx = that.eventsLabelsEn[5];
+				break;
+		}
+
 		let form = `
 			<form id="editEventForm" action="#" method="post">
-			<label for="editDate">Date</label>
+			<label for="editDate">${dateLabelTx}</label>
 			<input type="text" name="editedDate" class="datepicker" value="${event.date}" />
-				<label for="hoursBegin">Begin</label>
+				<label for="hoursBegin">${beginLabelTx}</label>
 				  <input type="text" name="hoursBegin" value="${event.from}" class="timepicker" />
-				  <label for="hoursFinish">Finish</label>
+				  <label for="hoursFinish">${finishLabelTx}</label>
 				  <input type="text" name="hoursFinish" value="${event.to}" class="timepicker" />  
-				  <label for="eventText">Text</label>
+				  <label for="eventText">${textLabelTx}</label>
 				  <textarea id="eventText" name="eventTextName" class="materialize-textarea">${event.text}</textarea>
-				  <a id="editLocalEvent" href="#" class="waves-effect waves-light btn">Edit STATIC EVENT</a>
-				  <input type="submit" class="waves-effect waves-light btn" value="Edit Event" />
-				  <input type="reset" class="waves-effect waves-light btn" value="Clear" />
-			</form>
-		`;
+				  <a id="editLocalEvent" href="#" class="waves-effect waves-light btn">${editStaticEvenBtnTx}</a>
+				  <input type="reset" class="waves-effect waves-light btn" value="${clearBtnTx}" />
+				  </form>
+				  `;
+		//   <input type="submit" class="waves-effect waves-light btn" value="Edit Event" />
 
 		eventsDashboard.innerHTML += form;
 
@@ -570,16 +755,32 @@ let eventCalendar = (function(calendarContainerId) {
 				editBtn.setAttribute('class', 'waves-effect waves-light btn addButtons');
 				// editBtn.setAttribute('href', `/editEvent/${event.id}`);
 				editBtn.setAttribute('href', `#`);
-				editBtn.innerText = 'Edit';
+				switch (that.language) {
+					case 'en':
+						editBtn.innerText = that.buttonLabelsEn[1];
+						deleteBtn.innerText = that.buttonLabelsEn[2];
+						checkUncheckBtn.innerText = that.buttonLabelsEn[3];
+						break;
+					case 'bg':
+						editBtn.innerText = that.buttonLabelsBg[1];
+						deleteBtn.innerText = that.buttonLabelsBg[2];
+						checkUncheckBtn.innerText = that.buttonLabelsBg[3];
+						break;
+					default:
+						editBtn.innerText = that.buttonLabelsEn[1];
+						deleteBtn.innerText = that.buttonLabelsEn[2];
+						checkUncheckBtn.innerText = that.buttonLabelsEn[3];
+						break;
+				}
 				editBtn.onclick = () => this.editLocalEvent(event);
 				deleteBtn.setAttribute('class', 'waves-effect red accent-4 btn addButtons');
 				// deleteBtn.setAttribute('href', `/deleteEvent/${event.id}`);
 				deleteBtn.onclick = () => this.deleteLocalEvent(event);
-				deleteBtn.innerText = 'Delete';
+				// deleteBtn.innerText = 'Delete';
 				checkUncheckBtn.setAttribute('class', 'waves-effect waves-light btn addButtons');
 				// editBtn.setAttribute('href', `/editEvent/${event.id}`);
 				checkUncheckBtn.setAttribute('href', `#`);
-				checkUncheckBtn.innerText = 'Check/Uncheck';
+				// checkUncheckBtn.innerText = 'Check/Uncheck';
 				checkUncheckBtn.onclick = () => this.checkUncheckLocalEvent(event);
 
 				li.appendChild(checkUncheckBtn);
@@ -598,7 +799,19 @@ let eventCalendar = (function(calendarContainerId) {
 			let list = type == 'ul' ? document.createElement('ul') : document.createElement('ol');
 			list.setAttribute('id', listId);
 			let li = document.createElement('li');
-			li.innerText = 'No events';
+
+			switch (that.language) {
+				case 'en':
+					li.innerText = that.eventsLabelsEn[2];
+					break;
+				case 'bg':
+					li.innerText = that.eventsLabelsBg[2];
+					break;
+				default:
+					li.innerText = that.eventsLabelsEn[2];
+					break;
+			}
+			// li.innerText = 'No events';
 			list.appendChild(li);
 			return list;
 		}
@@ -706,13 +919,35 @@ let eventCalendar = (function(calendarContainerId) {
 			res = res.slice(that.eventsPagStartIndex, that.eventsPagIndex);
 			let nextPageBtn = document.createElement('a');
 			nextPageBtn.setAttribute('class', 'waves-effect waves-light btn');
-			nextPageBtn.innerText = 'Show More';
+			switch (that.language) {
+				case 'en':
+					nextPageBtn.innerText = that.buttonLabelsEn[5];
+					break;
+				case 'bg':
+					nextPageBtn.innerText = that.buttonLabelsEn[5];
+					break;
+				default:
+					nextPageBtn.innerText = that.buttonLabelsEn[5];
+					break;
+			}
+			// nextPageBtn.innerText = 'Show More';
 			nextPageBtn.onclick = () => this.showMoreEvents();
 			eventsDashboarCont.appendChild(nextPageBtn);
 
 			let showPrevEventsBtn = document.createElement('a');
 			showPrevEventsBtn.setAttribute('class', 'waves-effect waves-light btn');
-			showPrevEventsBtn.innerText = 'Show Previous';
+			switch (that.language) {
+				case 'en':
+					showPrevEventsBtn.innerText = that.buttonLabelsEn[6];
+					break;
+				case 'bg':
+					showPrevEventsBtn.innerText = that.buttonLabelsEn[6];
+					break;
+				default:
+					showPrevEventsBtn.innerText = that.buttonLabelsEn[6];
+					break;
+			}
+			// showPrevEventsBtn.innerText = 'Show Previous';
 			showPrevEventsBtn.onclick = () => this.showLessEvents();
 			eventsDashboarCont.appendChild(showPrevEventsBtn);
 		}
@@ -757,12 +992,26 @@ let eventCalendar = (function(calendarContainerId) {
 			let dayNum = parseInt(day) < 10 ? '0' + parseInt(day) : day;
 			let nameOfDay = this.getNameOfDay(dayNum, that.currentMonthNum, that.currentYear);
 			let addEventBtn = document.createElement('a');
-			addEventBtn.setAttribute('class', 'waves-effect waves-light btn');
-			addEventBtn.innerText = 'Add event';
-			addEventBtn.onclick = () => this.addEventForm();
 			let showEventItemsBtn = document.createElement('a');
+			addEventBtn.setAttribute('class', 'waves-effect waves-light btn');
+
+			switch (that.language) {
+				case 'en':
+					addEventBtn.innerText = that.buttonLabelsEn[0];
+					showEventItemsBtn.innerText = that.buttonLabelsEn[4];
+					break;
+				case 'bg':
+					addEventBtn.innerText = that.buttonLabelsBg[0];
+					showEventItemsBtn.innerText = that.buttonLabelsBg[4];
+					break;
+				default:
+					addEventBtn.innerText = that.buttonLabelsEn[0];
+					showEventItemsBtn.innerText = that.buttonLabelsEn[4];
+					break;
+			}
+			addEventBtn.onclick = () => this.addEventForm();
+			
 			showEventItemsBtn.setAttribute('class', 'waves-effect waves-light btn eventBtns');
-			showEventItemsBtn.innerText = 'Show Events';
 			showEventItemsBtn.onclick = () => this.showEventItems();
 			if (!document.getElementById('addEventCont')) {
 				let addEventContDiv = document.createElement('div');
@@ -1053,11 +1302,31 @@ let eventCalendar = (function(calendarContainerId) {
 		let eventCont = document.getElementById('eventsSection');
 		let div = document.createElement('div');
 		div.setAttribute('id', 'previousEvents');
-		div.innerHTML = '<h5>Previous week events</h5>';
+		switch (that.language) {
+			case 'en':
+				div.innerHTML = '<h5>' + that.eventsLabelsEn[0] + '</h5>';
+				break;
+			case 'bg':
+				div.innerHTML = '<h5>' + that.eventsLabelsBg[0] + '</h5>';
+				break;
+			default:
+				div.innerHTML = '<h5>Previous week events</h5>';
+				break;
+		}
 		let listPastEvents = this.generateList('ul', extractedPastEvents, 'previousEventsList', false);
 		let listNextEvents = this.generateList('ul', extractedNextWeekEvents, 'nextEventsList', false);
 		div.appendChild(listPastEvents);
-		div.innerHTML += '<h5>Next week events</h5>';
+		switch (that.language) {
+			case 'en':
+				div.innerHTML += '<h5>' + that.eventsLabelsEn[1] + '</h5>';
+				break;
+			case 'bg':
+				div.innerHTML += '<h5>' + that.eventsLabelsBg[1] + '</h5>';
+				break;
+			default:
+				div.innerHTML += '<h5>' + that.eventsLabelsEn[1] + '</h5>';
+				break;
+		}
 		div.appendChild(listNextEvents);
 
 		eventCont.append(div);
