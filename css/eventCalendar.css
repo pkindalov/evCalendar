@@ -361,5 +361,5 @@ td:hover{
 
 #eventsCont{
     height: 50%;
-    overflow: scroll;
+    overflow: auto;
 }
