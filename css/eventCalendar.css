@@ -11,11 +11,7 @@ body{
 table{
     border-spacing: 0;
     border-collapse: collapse;
-    font-size: large;
-}
-
-td:hover{
-    cursor: pointer;
+    font-size: 13px;
 }
 
 
@@ -155,6 +151,33 @@ td:hover{
 
 #eventsList{
     overflow: auto;
+}
+
+
+@media(min-width: 300px) and (max-width: 375px){
+    #eventsSection{
+        width: 100%;
+    }
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        /* height: 95%; */
+        width: 50%;
+        margin-left: 38%;
+        /* visibility: hidden; */
+    }
+
+    #mainDateLabel, #nameOfMonth, #yearField, #dayName,
+    .dateLabel, .monthLabel, .yearLabel{
+        font-size: 25px;
+        height: 20%;
+    }
+
+    #eventsList{
+        overflow: scroll;
+        height: 350px;
+        font-size: 15px;
+    }
 }
 
 
@@ -324,4 +347,19 @@ td:hover{
 
 .nonVisible{
     visibility: hidden;
+}
+
+td:hover{
+    cursor: pointer;
+}
+
+.btn{
+    font-size: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#eventsCont{
+    height: 50%;
+    overflow: scroll;
 }
