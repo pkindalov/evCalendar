@@ -92,7 +92,7 @@ table{
 #eventsContainer{
     background-color: #1e88e5;
     position: fixed;
-    height: 82%;
+    height: 93%;
     width: 40%;
     margin-left: 29.5%;
     /* visibility: hidden; */
@@ -360,6 +360,6 @@ td:hover{
 }
 
 #eventsCont{
-    height: 50%;
+    height: 70%;
     overflow: auto;
 }
