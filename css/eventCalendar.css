@@ -167,9 +167,8 @@ table{
         /* visibility: hidden; */
     }
 
-    #mainDateLabel, #nameOfMonth, #yearField, #dayName,
-    .dateLabel, .monthLabel, .yearLabel{
-        font-size: 25px;
+    #mainDateLabel, #nameOfMonth, #yearField, #dayName, .monthLabel, .yearLabel{
+        font-size: 15px;
         height: 20%;
     }
 
@@ -177,6 +176,11 @@ table{
         overflow: scroll;
         height: 350px;
         font-size: 15px;
+    }
+
+    #mainDateLabel.dateLabel{
+        font-size: 30px;
+        height: 15px;
     }
 }
 
