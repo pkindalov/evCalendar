@@ -157,11 +157,18 @@ table{
 @media(min-width: 300px) and (max-width: 375px){
     #eventsSection{
         width: 100%;
+        margin-top: -40%;
     }
+
+    #eventsDashboard{
+        height: 390px;
+    }
+
+
     #eventsContainer{
         background-color: #1e88e5;
         position: fixed;
-        /* height: 95%; */
+        height: 92.4%;
         width: 50%;
         margin-left: 38%;
         /* visibility: hidden; */
@@ -173,14 +180,18 @@ table{
     }
 
     #eventsList{
-        overflow: scroll;
-        height: 350px;
+        overflow: auto;
+        height: 300px;
         font-size: 15px;
     }
 
     #mainDateLabel.dateLabel{
         font-size: 30px;
         height: 15px;
+    }
+
+    .container{
+        height: auto;
     }
 }
 
@@ -240,11 +251,12 @@ table{
 @media(min-width: 601px) and (max-width: 992px){
     #eventsSection{
         width: 100%;
+        margin-top: -10%;
     }
     #eventsContainer{
         background-color: #1e88e5;
         position: fixed;
-        height: 77%;
+        height: 82%;
         width: 46%;
         margin-left: 38%;
         /* visibility: hidden; */
@@ -266,6 +278,7 @@ table{
 @media(min-width: 993px) and (max-width: 1200px){
     #eventsSection{
         width: 100%;
+        margin-top: -20%;
     }
     #eventsContainer{
         background-color: #1e88e5;
@@ -286,6 +299,41 @@ table{
         overflow: scroll;
         height: 350px;
         font-size: 15px;
+    }
+}
+
+@media(min-width: 1200px){
+    #eventsSection{
+        width: 100%;
+        margin-top: -10%;
+    }
+
+    #eventsDashboard{
+        height: 391px;
+    }
+    #eventsContainer{
+        background-color: #1e88e5;
+        position: fixed;
+        height: auto;
+        width: 31.5%;
+        margin-left: 38%;
+        /* visibility: hidden; */
+    }
+
+    #mainDateLabel, #nameOfMonth, #yearField, #dayName,
+    .dateLabel, .monthLabel, .yearLabel{
+        font-size: 25px;
+        height: 20%;
+    }
+
+    #eventsList{
+        overflow: auto;
+        height: 350px;
+        font-size: 15px;
+    }
+
+    .container{
+        height: auto;
     }
 }
 
@@ -364,6 +412,6 @@ td:hover{
 }
 
 #eventsCont{
-    height: 70%;
+    height: auto;
     overflow: auto;
 }
