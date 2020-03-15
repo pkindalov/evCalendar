@@ -249,6 +249,13 @@ let eventCalendar = (function(calendarContainerId) {
 		that.language = language;
 	};
 
+	eventCalendar.prototype.checkAndCloseOpenedDateWindow = function(){
+		if(that.eventWindowToggled){
+			this.closeShowDateWindow();
+			that.eventWindowToggled = false;
+		}
+	}
+
 	eventCalendar.prototype.prevMonth = function() {
 		that.currentMonthNum <= 0 ? (that.currentMonthNum = 11) : --that.currentMonthNum;
 		document.getElementById('monthLabel').textContent = this.setCurrentMonthName(that.currentMonthNum);
@@ -256,6 +263,7 @@ let eventCalendar = (function(calendarContainerId) {
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
 		that.mainTheme = !that.useThemes ? '' : this.addThemeForMonth(that.currentMonthNum);
+		this.checkAndCloseOpenedDateWindow();
 		this.setThemeAllContainers();
 		this.drawCalendarBody();
 	};
@@ -267,6 +275,7 @@ let eventCalendar = (function(calendarContainerId) {
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
 		that.mainTheme = !that.useThemes ? '' : this.addThemeForMonth(that.currentMonthNum);
+		this.checkAndCloseOpenedDateWindow();
 		this.setThemeAllContainers();
 		this.drawCalendarBody();
 	};
@@ -277,6 +286,7 @@ let eventCalendar = (function(calendarContainerId) {
 		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
+		this.checkAndCloseOpenedDateWindow();
 		this.drawCalendarBody();
 	};
 
@@ -286,6 +296,7 @@ let eventCalendar = (function(calendarContainerId) {
 		that.currentMontCountOfDays = this.setCurrentMontCountOfDays(that.currentYear, that.currentMonthNum + 1);
 		that.firstDayOfMonth = this.setFirstDayOfMonth(that.currentYear, that.currentMonthNum);
 		that.indexToStartDays = this.setindexToStartDays(that.firstDayOfMonth);
+		this.checkAndCloseOpenedDateWindow();
 		this.drawCalendarBody();
 	};
 
@@ -1040,24 +1051,16 @@ let eventCalendar = (function(calendarContainerId) {
 
 			// document.getElementById('eventsContainer').style.visibility = 'visible';
 		} else {
-			this.clearContainerById('addEventCont');
-			this.clearContainerById('eventsDashboard');
-			document.getElementById('eventsContainer').classList.remove('visible');
-			document.getElementById('eventsContainer').setAttribute('class', 'nonVisible');
-
-			// document.getElementById('eventsContainer').style.visibility = 'hidden';
-			this.checkRecentlyPastEvents();
-			// if (document.getElementById('createEventForm')) {
-			// 	let form = document.getElementById('createEventForm');
-			// 	document.getElementById('eventsDashboard').removeChild(form);
-
-			// }
-
-			// if(document.getElementById('eventsDashboard')){
-			// 	document.getElementById('eventsDashboard').innerHTML = '';
-			// }
+			this.closeShowDateWindow();
 		}
-		// console.log(e.target.innerText);
+	};
+
+	eventCalendar.prototype.closeShowDateWindow = function() {
+		this.clearContainerById('addEventCont');
+		this.clearContainerById('eventsDashboard');
+		document.getElementById('eventsContainer').classList.remove('visible');
+		document.getElementById('eventsContainer').setAttribute('class', 'nonVisible');
+		this.checkRecentlyPastEvents();
 	};
 
 	eventCalendar.prototype.checkDayForEvents = function(day) {

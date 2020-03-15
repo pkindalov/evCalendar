@@ -154,7 +154,7 @@ table{
 }
 
 
-@media(min-width: 300px) and (max-width: 375px){
+@media(min-width: 300px) and (max-width: 374px){
     #eventsSection{
         width: 100%;
         margin-top: -40%;
@@ -199,11 +199,17 @@ table{
 @media(min-width: 375px) and (max-width: 500px){
     #eventsSection{
         width: 100%;
+        margin-top: -40%;
     }
+
+    #eventsDashboard{
+        height: 390px;
+    }
+
     #eventsContainer{
         background-color: #1e88e5;
         position: fixed;
-        height: 77%;
+        height: 92.4%;
         width: 50%;
         margin-left: 38%;
         /* visibility: hidden; */
@@ -216,20 +222,30 @@ table{
     }
 
     #eventsList{
-        overflow: scroll;
-        height: 350px;
+        overflow: auto;
+        height: 240px;
         font-size: 15px;
+    }
+
+    .container{
+        height: auto;
     }
 }
 
-@media(min-width: 502px) and (max-width: 600px){
+@media(min-width: 501px) and (max-width: 600px){
     #eventsSection{
         width: 100%;
+        margin-top: -20%;
     }
+
+    #eventsDashboard{
+        height: 390px;
+    }
+
     #eventsContainer{
         background-color: #1e88e5;
         position: fixed;
-        height: 77%;
+        height: 92.4%;
         width: 51%;
         margin-left: 38%;
         /* visibility: hidden; */
@@ -242,23 +258,32 @@ table{
     }
 
     #eventsList{
-        overflow: scroll;
-        height: 350px;
+        overflow: auto;
+        height: 240px;
         font-size: 15px;
+    }
+
+    .container{
+        height: auto;
     }
 }
 
 @media(min-width: 601px) and (max-width: 992px){
     #eventsSection{
         width: 100%;
-        margin-top: -10%;
+        margin-top: -20%;
     }
+
+    #eventsDashboard{
+        height: 390px;
+    }
+
     #eventsContainer{
         background-color: #1e88e5;
         position: fixed;
-        height: 82%;
-        width: 46%;
-        margin-left: 38%;
+        height: 92.4%;
+        width: 50%;
+        margin-left: 33.5%;
         /* visibility: hidden; */
     }
 
@@ -269,9 +294,13 @@ table{
     }
 
     #eventsList{
-        overflow: scroll;
-        height: 350px;
+        overflow: auto;
+        height: 310px;
         font-size: 15px;
+    }
+
+    .container{
+        height: auto;
     }
 }
 
