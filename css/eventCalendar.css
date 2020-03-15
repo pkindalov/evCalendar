@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Concert+One&display=swap');
 
+*{
+    box-sizing: border-box;
+}
+
 body{
     font-family: 'Concert One', cursive;
 }
@@ -167,10 +171,10 @@ table{
 
     #eventsContainer{
         background-color: #1e88e5;
-        position: fixed;
-        height: 92.4%;
-        width: 50%;
-        margin-left: 38%;
+        position: absolute;
+        height: 97%;
+        width: 50.3%;
+        margin-left: 47%;
         /* visibility: hidden; */
     }
 
@@ -191,7 +195,8 @@ table{
     }
 
     .container{
-        height: auto;
+        /* height: 750px; */
+        width: 100%;
     }
 }
 
