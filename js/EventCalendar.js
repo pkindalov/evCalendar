@@ -1303,6 +1303,7 @@ let eventCalendar = (function(calendarContainerId) {
 				}
 				break;
 			case 'next':
+                date++;
 				for (let i = 0; i <= daysCount; i++) {
 					let d = new Date();
 					// let dd = d.getDate() + i > currentMontDays ? 1 : d.getDate() + i;
