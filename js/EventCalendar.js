@@ -69,8 +69,8 @@ let eventCalendar = (function(calendarContainerId) {
 		'Finish',
 		'Text',
 		'Date',
-        'Events on this day',
-		'Events this month'
+		'Events on this day',
+		'Events this month',
 	];
 	that.eventsLabelsBg = [
 		'Събития миналата седмица',
@@ -80,8 +80,8 @@ let eventCalendar = (function(calendarContainerId) {
 		'Приключване',
 		'Текст',
 		'Дата',
-        'Събития на този ден',
-		'Събития този месец'
+		'Събития на този ден',
+		'Събития този месец',
 	];
 	that.buttonLabelsEn = [
 		'Add event',
@@ -156,8 +156,8 @@ let eventCalendar = (function(calendarContainerId) {
 
 		that.eventsContainer = document.getElementById(eventsContainerId);
 	};
-    
-   eventCalendar.prototype.sortDataEventsByDate = function(data) {
+
+	eventCalendar.prototype.sortDataEventsByDate = function(data) {
 		data.sort((a, b) => {
 			return new Date(a.date) - new Date(b.date);
 			// a = a.date.split('-').reverse().join('');
@@ -250,26 +250,31 @@ let eventCalendar = (function(calendarContainerId) {
 	eventCalendar.prototype.setUseOfThemes = function(useTheme) {
 		if (typeof useTheme !== 'boolean') {
 			// throw new Error('Variable of setUseOfTheme method must be of type boolean');
-			console.log('Variable of setUseOfTheme method must be of type boolean');
-			return;
+			try{
+				useTheme = Boolean(useTheme);
+			}catch{
+				console.log('Variable of setUseOfTheme method must be of type boolean');
+				return;
+			}
 		}
 		that.useThemes = useTheme;
 	};
 
 	eventCalendar.prototype.setLanguage = function(language) {
 		if (!language) {
+			console.log('Not valid language value.');
 			return;
 		}
 
 		that.language = language;
 	};
 
-	eventCalendar.prototype.checkAndCloseOpenedDateWindow = function(){
-		if(that.eventWindowToggled){
+	eventCalendar.prototype.checkAndCloseOpenedDateWindow = function() {
+		if (that.eventWindowToggled) {
 			this.closeShowDateWindow();
 			that.eventWindowToggled = false;
 		}
-	}
+	};
 
 	eventCalendar.prototype.prevMonth = function() {
 		that.currentMonthNum <= 0 ? (that.currentMonthNum = 11) : --that.currentMonthNum;
@@ -281,7 +286,7 @@ let eventCalendar = (function(calendarContainerId) {
 		this.checkAndCloseOpenedDateWindow();
 		this.setThemeAllContainers();
 		this.drawCalendarBody();
-        this.checkRecentlyPastEvents();
+		this.checkRecentlyPastEvents();
 	};
 
 	eventCalendar.prototype.nextMonth = function() {
@@ -294,7 +299,7 @@ let eventCalendar = (function(calendarContainerId) {
 		this.checkAndCloseOpenedDateWindow();
 		this.setThemeAllContainers();
 		this.drawCalendarBody();
-        this.checkRecentlyPastEvents();
+        	this.checkRecentlyPastEvents();
 	};
 
 	eventCalendar.prototype.prevYear = function() {
@@ -763,6 +768,10 @@ let eventCalendar = (function(calendarContainerId) {
 		this.showEventItems();
 	};
 
+	eventCalendar.prototype.reverseDateString = function(dateStr){
+		return dateStr.split('-').reverse().join('-');
+	}
+
 	eventCalendar.prototype.createList = function(type, data, addButtons) {
 		let listCont = document.createElement(type);
 		listCont.setAttribute('id', 'eventsCont');
@@ -770,7 +779,7 @@ let eventCalendar = (function(calendarContainerId) {
 
 		for (let event of data) {
 			li = document.createElement('li');
-			li.innerText = `${event.date} - ${event.from} : ${event.to} - ${event.text}`;
+			li.innerText = `${this.reverseDateString(event.date)} - ${event.from} : ${event.to} - ${event.text}`;
 
 			if (event.checked) {
 				li.setAttribute('class', 'itemChecked');
@@ -1273,22 +1282,24 @@ let eventCalendar = (function(calendarContainerId) {
 		return date;
 	};
 
-		eventCalendar.prototype.getStrDatesFromCount = function(type, daysCount) {
+	eventCalendar.prototype.getStrDatesFromCount = function(type, daysCount) {
 		let res = [];
 		let currentMontDays = new Date(that.currentYear, that.currentMonthNum + 1, 0).getDate();
+		let prevMonthDays = new Date(that.currentYear, that.currentMonthNum + 1, 0).getDate();
+		
 		let month = that.currentMonthNum;
 		let date = new Date().getDate();
 	
 		//months - from 0 to 11
 		switch (type) {
 			case 'prev':
-				for (let i = 0; i <= daysCount; i++) {
+				for (let i = 0; i < daysCount; i++) {
 					let d = new Date();
 					// let dd = d.getDate() - i;
 					// d.setDate(dd);
 
-					if (date < 0) {
-						date = 1;
+					if (date < 1) {
+						date = prevMonthDays;
 						d.setDate(date);
 						d.setMonth(--month);
 					} else {
@@ -1303,8 +1314,8 @@ let eventCalendar = (function(calendarContainerId) {
 				}
 				break;
 			case 'next':
-                date++;
-				for (let i = 0; i <= daysCount; i++) {
+					date++;
+				for (let i = 0; i < daysCount; i++) {
 					let d = new Date();
 					// let dd = d.getDate() + i > currentMontDays ? 1 : d.getDate() + i;
 					// console.log(dd);
@@ -1328,8 +1339,8 @@ let eventCalendar = (function(calendarContainerId) {
 
 		return res;
 	};
-    
-    eventCalendar.prototype.getCurrentDayEvents = function(){
+
+	eventCalendar.prototype.getCurrentDayEvents = function() {
 		let today = new Date().getDate();
 		let day;
 
@@ -1337,15 +1348,15 @@ let eventCalendar = (function(calendarContainerId) {
 
 		let result = [];
 
-		for(let dateEvent of that.eventsData){
+		for (let dateEvent of that.eventsData) {
 			day = new Date(dateEvent.date).getDate();
-			if(today === day){
+			if (today === day) {
 				result.push(dateEvent);
 			}
 		}
 
 		return result;
-	}
+	};
 
 	eventCalendar.prototype.getCurrentMonthEvents = function() {
 		// let currentMonth = new Date().getMonth() + 1;
@@ -1366,7 +1377,7 @@ let eventCalendar = (function(calendarContainerId) {
 		return result;
 	};
 
-	eventCalendar.prototype.setTranslatedLabel = function(language, labelArrEn, labelArrBg, index, htmlEl){
+	eventCalendar.prototype.setTranslatedLabel = function(language, labelArrEn, labelArrBg, index, htmlEl) {
 		switch (language) {
 			case 'en':
 				htmlEl.innerHTML += '<h5>' + labelArrEn[index] + '</h5>';
@@ -1379,7 +1390,7 @@ let eventCalendar = (function(calendarContainerId) {
 				// div.innerHTML = '<h5>Previous week events</h5>';
 				break;
 		}
-	}
+	};
 
 	eventCalendar.prototype.checkRecentlyPastEvents = function() {
 		const WEEKDAYS = 7;
@@ -1389,24 +1400,24 @@ let eventCalendar = (function(calendarContainerId) {
 		let nextWeekDates = this.getStrDatesFromCount('next', WEEKDAYS);
 		let extractedPastEvents = this.extractEvents(pastWeekDates);
 		let extractedNextWeekEvents = this.extractEvents(nextWeekDates);
-        let currеntDayEvents = this.getCurrentDayEvents();
+		let currеntDayEvents = this.getCurrentDayEvents();
 		let currentMontEvents = this.getCurrentMonthEvents();
 
 		let eventCont = document.getElementById('eventsSection');
 		let div = document.createElement('div');
 		div.setAttribute('id', 'previousEvents');
-        this.setTranslatedLabel(that.language, that.eventsLabelsEn, that.eventsLabelsBg, 0, div);
+		this.setTranslatedLabel(that.language, that.eventsLabelsEn, that.eventsLabelsBg, 0, div);
 		let listPastEvents = this.generateList('ul', extractedPastEvents, 'previousEventsList', false);
 		let listNextEvents = this.generateList('ul', extractedNextWeekEvents, 'nextEventsList', false);
 		div.appendChild(listPastEvents);
-        this.setTranslatedLabel(that.language, that.eventsLabelsEn, that.eventsLabelsBg, 1, div);
+		this.setTranslatedLabel(that.language, that.eventsLabelsEn, that.eventsLabelsBg, 1, div);
 		div.appendChild(listNextEvents);
-        this.setTranslatedLabel(that.language, that.eventsLabelsEn, that.eventsLabelsBg, 7, div);
-        let listCurrentDayEvents = this.generateList('ul', currеntDayEvents, 'currentDayEvents', false);
-        let listCurrentMontEvents = this.generateList('ul', currentMontEvents, 'currentMonthEvents', false);
-        div.appendChild(listCurrentDayEvents);
-        this.setTranslatedLabel(that.language, that.eventsLabelsEn, that.eventsLabelsBg, 8, div);
-        div.appendChild(listCurrentMontEvents);
+		this.setTranslatedLabel(that.language, that.eventsLabelsEn, that.eventsLabelsBg, 7, div);
+		let listCurrentDayEvents = this.generateList('ul', currеntDayEvents, 'currentDayEvents', false);
+		let listCurrentMontEvents = this.generateList('ul', currentMontEvents, 'currentMonthEvents', false);
+		div.appendChild(listCurrentDayEvents);
+		this.setTranslatedLabel(that.language, that.eventsLabelsEn, that.eventsLabelsBg, 8, div);
+		div.appendChild(listCurrentMontEvents);
 		eventCont.append(div);
 
 		// console.log(extractedPastEvents);
