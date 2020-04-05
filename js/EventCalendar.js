@@ -1285,7 +1285,7 @@ let eventCalendar = (function(calendarContainerId) {
 	eventCalendar.prototype.getStrDatesFromCount = function(type, daysCount) {
 		let res = [];
 		let currentMontDays = new Date(that.currentYear, that.currentMonthNum + 1, 0).getDate();
-		let prevMonthDays = new Date(that.currentYear, that.currentMonthNum + 1, 0).getDate();
+		let prevMonthDays = new Date(that.currentYear, that.currentMonthNum, 0).getDate();
 		
 		let month = that.currentMonthNum;
 		let date = new Date().getDate();
@@ -1300,8 +1300,9 @@ let eventCalendar = (function(calendarContainerId) {
 
 					if (date < 1) {
 						date = prevMonthDays;
+						month--;
+						d.setMonth(month);
 						d.setDate(date);
-						d.setMonth(--month);
 					} else {
 						d.setDate(date);
 						d.setMonth(month);
